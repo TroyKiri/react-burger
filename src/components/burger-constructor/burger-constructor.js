@@ -17,9 +17,9 @@ function BurgerConstructor(props) {
       </div>
       <div className={burgerConstructorStyles.scrollbar}>
         <ul className={burgerConstructorStyles.listContainer}>
-          {props.data.map(item => {
+          {props.data.map((item, index) => {
             if (item.type !== 'bun' && item.name !== "Соус Spicy-X") {
-              return <li className={burgerConstructorStyles.listElement + ' mr-2'}>
+              return <li key={item._id} className={burgerConstructorStyles.listElement + ' mr-2'}>
                 <div className='mr-2'>
                   <DragIcon type="primary" />
                 </div>
