@@ -7,9 +7,9 @@
   text-align: center;
 }
 
-.card:nth-last-child(-n+2) {
+/* .card:nth-last-child(-n+2) {
   margin-bottom: 0;
-}
+} */
 
 .price {
   display: flex;

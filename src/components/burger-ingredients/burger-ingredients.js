@@ -12,7 +12,7 @@ import CardIngredient from '../card-ingredient/card-ingredient.js';
 function BurgerIngredients(props) {
   const [current, setCurrent] = React.useState('rolls');;
   return (
-    <section className={`${burgerIngredientsStyles.ingredients} ml-5`}>
+    <section className={`${burgerIngredientsStyles.ingredients} ml-5 mr-10`}>
       <h2 className='text text_type_main-large mt-10 mb-5'>Соберите бургер</h2>
       <div style={{ display: 'flex' }}>
         <Tab value="rolls" active={current === 'rolls'} onClick={setCurrent}>
@@ -35,7 +35,7 @@ function BurgerIngredients(props) {
           </div>
         </div>
         <div className={burgerIngredientsStyles.block}>
-          <h2 className='text text_type_main-medium mt-10 mb-6'>Соусы</h2>
+          <h2 className='text text_type_main-medium mt-2 mb-6'>Соусы</h2>
           <div className={`${burgerIngredientsStyles.container} mr-4`}>
             {props.data.map(item => {
               return item.type==='sauce' ? <CardIngredient item={item} key={item._id} /> : null;
@@ -43,7 +43,7 @@ function BurgerIngredients(props) {
           </div>
         </div>
         <div className={burgerIngredientsStyles.block}>
-          <h2 className='text text_type_main-medium mt-10 mb-6'>Начинки</h2>
+          <h2 className='text text_type_main-medium mt-2 mb-6'>Начинки</h2>
           <div className={`${burgerIngredientsStyles.container} mr-4`}>
             {props.data.map(item => {
               return item.type==='main' ? <CardIngredient item={item} key={item._id} /> : null;

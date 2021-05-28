@@ -8,7 +8,7 @@ import BurgerConstructor from '../burger-constructor/burger-constructor.js';
 
 function App() {
   return (
-    <main className={appStyles.page}>
+    <main className={`${appStyles.page} mb-10`}>
       <AppHeader />
       <section className={appStyles.main}>
         <BurgerIngredients data = {data} />
