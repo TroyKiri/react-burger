@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.scrollbar {
+  width: 100%;
+  height: 496px;
+  overflow-y: scroll;
+}
+.scrollbar::-webkit-scrollbar-track {
+  background-color: #2F2F37;
+}
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #8585AD;
+}
+
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
+  list-style: none;
+  position: relative;
+}
+
+.listElement {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.orderContainer {
+  display: flex;
+  align-items: center;
+}
+.priceContainer {
+  display: flex;
+  align-items: center;
+}
