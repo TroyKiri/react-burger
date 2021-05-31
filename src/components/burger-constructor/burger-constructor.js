@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import PropTypes from 'prop-types';
 //проверка объекта с определенной структурой
 import dataPropTypes from '../../utils/prop-types';
@@ -6,7 +8,25 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
+import ModalOverlay from '../modal-overlay/modal-overlay';
+
 function BurgerConstructor(props) {
+  // const [visible, setVisible] = useState(false)
+  const [state, setState] = useState({
+    visible: false,
+    header: ''
+  })
+  const openModal = () => {
+    setState({...state, visible:true})
+  }
+
+  const closeModal = () => {
+    setState({...state, visible:false})
+  }
+
+  const modal = (
+    <ModalOverlay onClose={closeModal}/>
+  );
   return (
     <section className={`${burgerConstructorStyles.container} mr-9 pt-25`}>
       <div className={`${burgerConstructorStyles.listElement} mr-4`}>
@@ -50,10 +70,11 @@ function BurgerConstructor(props) {
           <p className='text text_type_digits-medium mr-2'>610</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium">
+        <Button type="primary" size="medium" onClick={openModal}>
           Оформить заказ
         </Button>
       </div>
+      {state.visible && modal}
     </section>
     
   )
