@@ -11,13 +11,26 @@ import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktiku
 import ModalOverlay from '../modal-overlay/modal-overlay';
 
 function BurgerConstructor(props) {
-  // const [visible, setVisible] = useState(false)
   const [state, setState] = useState({
     visible: false,
-    header: ''
+    type: ''
   })
-  const openModal = () => {
-    setState({...state, visible:true})
+  const openModal = (event) => {
+    let typeOfModal;
+    // определение содержимого модального окна (окно заказа или окно ингредиента)
+    event.target.nodeName === 'BUTTON' ? typeOfModal = 'checkout-button' : typeOfModal = 'ingredient';
+    // меняю состояние
+    setState({...state, visible:true, type:typeOfModal})
+
+    // вешаю обработчик на document события keydown для ESC
+    document.addEventListener('keydown', (event) => {
+      event.key === 'Escape' && closeModal();
+    });
+    // обработчик события для закрытия окна при клике по overlay
+    document.addEventListener('click', (event) => {
+      //1ая проверка: клик не произошел по крестику
+      !(event.target.localName === 'svg') && event.target.className.startsWith('modal-overlay') && closeModal()
+    })
   }
 
   const closeModal = () => {
@@ -25,11 +38,11 @@ function BurgerConstructor(props) {
   }
 
   const modal = (
-    <ModalOverlay onClose={closeModal}/>
+    <ModalOverlay onClose={closeModal} {...state}/>
   );
   return (
     <section className={`${burgerConstructorStyles.container} mr-9 pt-25`}>
-      <div className={`${burgerConstructorStyles.listElement} mr-4`}>
+      <div className={`${burgerConstructorStyles.listElement} mr-4`} onClick={openModal}>
         <ConstructorElement
           type="top"
           isLocked={true}
@@ -42,7 +55,7 @@ function BurgerConstructor(props) {
         <ul className={burgerConstructorStyles.listContainer}>
           {props.data.map((item) => {
             return (item.type !== 'bun' && item.name !== "Соус Spicy-X" && 
-              <li key={item._id} className={`${burgerConstructorStyles.listElement} mr-2`}>
+              <li key={item._id} className={`${burgerConstructorStyles.listElement} mr-2`} onClick={openModal}>
                 <div className='mr-2'>
                   <DragIcon type="primary" />
                 </div>
@@ -56,7 +69,7 @@ function BurgerConstructor(props) {
           })}
         </ul>
       </div>
-      <div className={`${burgerConstructorStyles.listElement} mr-4`}>
+      <div className={`${burgerConstructorStyles.listElement} mr-4`} onClick={openModal}>
         <ConstructorElement
           type="bottom"
           isLocked={true}

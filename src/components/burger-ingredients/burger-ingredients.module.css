@@ -1,6 +1,7 @@
 .ingredients {
   display: flex;
   flex-direction: column;
+  width: 46.875%;
 }
 
 .scrollbar {

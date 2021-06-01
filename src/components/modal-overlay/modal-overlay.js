@@ -8,12 +8,11 @@ function ModalOverlay(props) {
   return ReactDOM.createPortal(
     (
       <section className={modalOverlayStyles.overlay}>
-        <Modal onClose={props.onClose}/>
+        <Modal {...props}/>
       </section>
     ), 
     modalRoot
   );
-
 }
 
 export default ModalOverlay;
