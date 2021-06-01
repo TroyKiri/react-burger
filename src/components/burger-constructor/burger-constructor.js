@@ -15,22 +15,16 @@ function BurgerConstructor(props) {
     visible: false,
     type: ''
   })
+
   const openModal = (event) => {
     let typeOfModal;
-    // определение содержимого модального окна (окно заказа или окно ингредиента)
+    // изменение свойства type состояния (окно с ингредиентом или с заказом в зависимости от события
     event.target.nodeName === 'BUTTON' ? typeOfModal = 'checkout-button' : typeOfModal = 'ingredient';
-    // меняю состояние
     setState({...state, visible:true, type:typeOfModal})
 
-    // вешаю обработчик на document события keydown для ESC
     document.addEventListener('keydown', (event) => {
       event.key === 'Escape' && closeModal();
     });
-    // обработчик события для закрытия окна при клике по overlay
-    document.addEventListener('click', (event) => {
-      //1ая проверка: клик не произошел по крестику
-      !(event.target.localName === 'svg') && event.target.className.startsWith('modal-overlay') && closeModal()
-    })
   }
 
   const closeModal = () => {
