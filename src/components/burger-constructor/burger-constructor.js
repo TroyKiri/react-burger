@@ -11,32 +11,36 @@ import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktiku
 import ModalOverlay from '../modal-overlay/modal-overlay';
 
 function BurgerConstructor(props) {
-  const [state, setState] = useState({
-    visible: false,
-    type: ''
-  })
+  const [visible, setVisible] = useState(false)
+  const [typeOfModal, setTypeOfModal] = useState('')
+  const [ingredient, setIngredient] = useState({})
 
-  const openModal = (event) => {
+  const openModal =(id) => (event) => {
     let typeOfModal;
     // изменение свойства type состояния (окно с ингредиентом или с заказом в зависимости от события
     event.target.nodeName === 'BUTTON' ? typeOfModal = 'checkout-button' : typeOfModal = 'ingredient';
-    setState({...state, visible:true, type:typeOfModal})
+    // находим ингредиент в данных с API, который был выбран
+    const ingredientItem = props.data.find(item => item._id === id);
 
+    setVisible(true);
+    setTypeOfModal(typeOfModal);
+    setIngredient(ingredientItem)
+    
     document.addEventListener('keydown', (event) => {
       event.key === 'Escape' && closeModal();
     });
   }
 
   const closeModal = () => {
-    setState({...state, visible:false})
+    setVisible(false)
   }
 
   const modal = (
-    <ModalOverlay onClose={closeModal} {...state}/>
+    <ModalOverlay onClose={closeModal} typeOfModal={typeOfModal} ingredient = {ingredient}/>
   );
   return (
     <section className={`${burgerConstructorStyles.container} mr-9 pt-25`}>
-      <div className={`${burgerConstructorStyles.listElement} mr-4`} onClick={openModal}>
+      <li className={`${burgerConstructorStyles.listElement} mr-4`} onClick={openModal('60b646daabc9290027b206d7')}>
         <ConstructorElement
           type="top"
           isLocked={true}
@@ -44,12 +48,12 @@ function BurgerConstructor(props) {
           price={200}
           thumbnail='https://code.s3.yandex.net/react/code/bun-02.png'
         />
-      </div>
+      </li>
       <div className={burgerConstructorStyles.scrollbar}>
         <ul className={burgerConstructorStyles.listContainer}>
           {props.data.map((item) => {
             return (item.type !== 'bun' && item.name !== "Соус Spicy-X" && 
-              <li key={item._id} className={`${burgerConstructorStyles.listElement} mr-2`} onClick={openModal}>
+              <li key={item._id} className={`${burgerConstructorStyles.listElement} mr-2`} onClick={openModal(item._id)}>
                 <div className='mr-2'>
                   <DragIcon type="primary" />
                 </div>
@@ -63,7 +67,7 @@ function BurgerConstructor(props) {
           })}
         </ul>
       </div>
-      <div className={`${burgerConstructorStyles.listElement} mr-4`} onClick={openModal}>
+      <li className={`${burgerConstructorStyles.listElement} mr-4`} onClick={openModal('60b646daabc9290027b206d7')}>
         <ConstructorElement
           type="bottom"
           isLocked={true}
@@ -71,17 +75,17 @@ function BurgerConstructor(props) {
           price={200}
           thumbnail='https://code.s3.yandex.net/react/code/bun-02.png'
         />
-      </div>
+      </li>
       <div className={`${burgerConstructorStyles.orderContainer} mt-10 mr-4`}>
         <div className={`${burgerConstructorStyles.priceContainer} mr-10`}>
           <p className='text text_type_digits-medium mr-2'>610</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium" onClick={openModal}>
+        <Button type="primary" size="medium" onClick={openModal()}>
           Оформить заказ
         </Button>
       </div>
-      {state.visible && modal}
+      {visible && modal}
     </section>
     
   )
