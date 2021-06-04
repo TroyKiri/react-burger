@@ -18,9 +18,15 @@ function App() {
   function getData() {
     setState({...state, isLoading:true})
     fetch(DATA_ID)
+      .then(res => {
+        return res.ok ? res : Promise.reject(res.status)
+      })
       .then(res => res.json())
       .then(res => setState({...state, res, isLoading: false}))
-      .catch(e => setState({...state, isLoading: false, hasError: true}))
+      .catch(e => {
+        console.log(`Ошибка: статус промиса: ${e}`);
+        setState({...state, isLoading: false, hasError: true})
+      })
   }
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import PropTypes from 'prop-types';
 //проверка объекта с определенной структурой
@@ -15,6 +15,13 @@ function BurgerConstructor(props) {
   const [typeOfModal, setTypeOfModal] = useState('')
   const [ingredient, setIngredient] = useState({})
 
+  useEffect(()=>{
+    const escHnalder = (event) => event.key === 'Escape' && closeModal();
+    document.addEventListener('keydown', escHnalder);
+
+    return () => document.removeEventListener('keydown', escHnalder);
+  }, []);
+
   const openModal =(id) => (event) => {
     let typeOfModal;
     // изменение свойства type состояния (окно с ингредиентом или с заказом в зависимости от события
@@ -25,22 +32,25 @@ function BurgerConstructor(props) {
     setVisible(true);
     setTypeOfModal(typeOfModal);
     setIngredient(ingredientItem)
-    
-    document.addEventListener('keydown', (event) => {
-      event.key === 'Escape' && closeModal();
-    });
   }
 
   const closeModal = () => {
     setVisible(false)
   }
 
+  // пока хардкод
+  const bunChoose = () => {
+    return (props.data.find((item) => item.name==="Краторная булка N-200i"))._id
+  }
+
+  const bunId = bunChoose();
+
   const modal = (
     <ModalOverlay onClose={closeModal} typeOfModal={typeOfModal} ingredient = {ingredient}/>
   );
   return (
     <section className={`${burgerConstructorStyles.container} mr-9 pt-25`}>
-      <li className={`${burgerConstructorStyles.listElement} mr-4`} onClick={openModal('60b646daabc9290027b206d7')}>
+      <li className={`${burgerConstructorStyles.listElement} mr-4`} onClick={openModal(bunId)}>
         <ConstructorElement
           type="top"
           isLocked={true}
@@ -52,7 +62,7 @@ function BurgerConstructor(props) {
       <div className={burgerConstructorStyles.scrollbar}>
         <ul className={burgerConstructorStyles.listContainer}>
           {props.data.map((item) => {
-            return (item.type !== 'bun' && item.name !== "Соус Spicy-X" && 
+            return (item.type !== 'bun' && 
               <li key={item._id} className={`${burgerConstructorStyles.listElement} mr-2`} onClick={openModal(item._id)}>
                 <div className='mr-2'>
                   <DragIcon type="primary" />
@@ -67,7 +77,7 @@ function BurgerConstructor(props) {
           })}
         </ul>
       </div>
-      <li className={`${burgerConstructorStyles.listElement} mr-4`} onClick={openModal('60b646daabc9290027b206d7')}>
+      <li className={`${burgerConstructorStyles.listElement} mr-4`} onClick={openModal(bunId)}>
         <ConstructorElement
           type="bottom"
           isLocked={true}
