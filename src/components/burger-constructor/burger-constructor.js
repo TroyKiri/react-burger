@@ -1,5 +1,3 @@
-import { useState, useEffect } from 'react';
-
 import PropTypes from 'prop-types';
 //проверка объекта с определенной структурой
 import dataPropTypes from '../../utils/prop-types';
@@ -8,49 +6,10 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
-import ModalOverlay from '../modal-overlay/modal-overlay';
-
 function BurgerConstructor(props) {
-  const [visible, setVisible] = useState(false)
-  const [typeOfModal, setTypeOfModal] = useState('')
-  const [ingredient, setIngredient] = useState({})
-
-  useEffect(()=>{
-    const escHnalder = (event) => event.key === 'Escape' && closeModal();
-    document.addEventListener('keydown', escHnalder);
-
-    return () => document.removeEventListener('keydown', escHnalder);
-  }, []);
-
-  const openModal =(id) => (event) => {
-    let typeOfModal;
-    // изменение свойства type состояния (окно с ингредиентом или с заказом в зависимости от события
-    event.target.nodeName === 'BUTTON' ? typeOfModal = 'checkout-button' : typeOfModal = 'ingredient';
-    // находим ингредиент в данных с API, который был выбран
-    const ingredientItem = props.data.find(item => item._id === id);
-
-    setVisible(true);
-    setTypeOfModal(typeOfModal);
-    setIngredient(ingredientItem)
-  }
-
-  const closeModal = () => {
-    setVisible(false)
-  }
-
-  // пока хардкод
-  const bunChoose = () => {
-    return (props.data.find((item) => item.name==="Краторная булка N-200i"))._id
-  }
-
-  const bunId = bunChoose();
-
-  const modal = (
-    <ModalOverlay onClose={closeModal} typeOfModal={typeOfModal} ingredient = {ingredient}/>
-  );
   return (
     <section className={`${burgerConstructorStyles.container} mr-9 pt-25`}>
-      <li className={`${burgerConstructorStyles.listElement} mr-4`} onClick={openModal(bunId)}>
+      <li className={`${burgerConstructorStyles.listElement} mr-4`}>
         <ConstructorElement
           type="top"
           isLocked={true}
@@ -63,7 +22,7 @@ function BurgerConstructor(props) {
         <ul className={burgerConstructorStyles.listContainer}>
           {props.data.map((item) => {
             return (item.type !== 'bun' && 
-              <li key={item._id} className={`${burgerConstructorStyles.listElement} mr-2`} onClick={openModal(item._id)}>
+              <li key={item._id} className={`${burgerConstructorStyles.listElement} mr-2`}>
                 <div className='mr-2'>
                   <DragIcon type="primary" />
                 </div>
@@ -77,7 +36,7 @@ function BurgerConstructor(props) {
           })}
         </ul>
       </div>
-      <li className={`${burgerConstructorStyles.listElement} mr-4`} onClick={openModal(bunId)}>
+      <li className={`${burgerConstructorStyles.listElement} mr-4`}>
         <ConstructorElement
           type="bottom"
           isLocked={true}
@@ -91,18 +50,18 @@ function BurgerConstructor(props) {
           <p className='text text_type_digits-medium mr-2'>610</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium" onClick={openModal()}>
+        <Button type="primary" size="medium" onClick={props.openModal}>
           Оформить заказ
         </Button>
       </div>
-      {visible && modal}
     </section>
     
   )
 }
 
 BurgerConstructor.propTypes = {
-  data: PropTypes.arrayOf(dataPropTypes).isRequired
+  data: PropTypes.arrayOf(dataPropTypes).isRequired,
+  openModal: PropTypes.func.isRequired
 }
 
 export default BurgerConstructor;
