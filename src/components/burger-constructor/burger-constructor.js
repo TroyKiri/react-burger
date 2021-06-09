@@ -9,7 +9,7 @@ import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktiku
 function BurgerConstructor(props) {
   return (
     <section className={`${burgerConstructorStyles.container} mr-9 pt-25`}>
-      <div className={`${burgerConstructorStyles.listElement} mr-4`}>
+      <li className={`${burgerConstructorStyles.listElement} mr-4`}>
         <ConstructorElement
           type="top"
           isLocked={true}
@@ -17,11 +17,11 @@ function BurgerConstructor(props) {
           price={200}
           thumbnail='https://code.s3.yandex.net/react/code/bun-02.png'
         />
-      </div>
+      </li>
       <div className={burgerConstructorStyles.scrollbar}>
         <ul className={burgerConstructorStyles.listContainer}>
           {props.data.map((item) => {
-            return (item.type !== 'bun' && item.name !== "Соус Spicy-X" && 
+            return (item.type !== 'bun' && 
               <li key={item._id} className={`${burgerConstructorStyles.listElement} mr-2`}>
                 <div className='mr-2'>
                   <DragIcon type="primary" />
@@ -36,7 +36,7 @@ function BurgerConstructor(props) {
           })}
         </ul>
       </div>
-      <div className={`${burgerConstructorStyles.listElement} mr-4`}>
+      <li className={`${burgerConstructorStyles.listElement} mr-4`}>
         <ConstructorElement
           type="bottom"
           isLocked={true}
@@ -44,13 +44,13 @@ function BurgerConstructor(props) {
           price={200}
           thumbnail='https://code.s3.yandex.net/react/code/bun-02.png'
         />
-      </div>
+      </li>
       <div className={`${burgerConstructorStyles.orderContainer} mt-10 mr-4`}>
         <div className={`${burgerConstructorStyles.priceContainer} mr-10`}>
           <p className='text text_type_digits-medium mr-2'>610</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium">
+        <Button type="primary" size="medium" onClick={props.openModal}>
           Оформить заказ
         </Button>
       </div>
@@ -60,7 +60,8 @@ function BurgerConstructor(props) {
 }
 
 BurgerConstructor.propTypes = {
-  data: PropTypes.arrayOf(dataPropTypes).isRequired
+  data: PropTypes.arrayOf(dataPropTypes).isRequired,
+  openModal: PropTypes.func.isRequired
 }
 
 export default BurgerConstructor;
