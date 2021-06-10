@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import cardIngrStyles from './card-ingredient.module.css';
@@ -8,10 +9,17 @@ import dataPropTypes from '../../utils/prop-types';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 
+import { ChoosenIngredientContext } from '../../services/ingredientContext';
+
 function CardIngredient(props) {
+
+  const [choosenIngredients, setChoosenIngrediens] = React.useContext(ChoosenIngredientContext);
+
   const renderIngredient = () => {
     props.openModal();
     props.chooseIngredient(props.item);
+    // setChoosenIngrediens([...choosenIngredients, props.item]);
+    setChoosenIngrediens(props.item);
   }
 
   return (

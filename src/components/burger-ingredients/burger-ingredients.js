@@ -9,7 +9,13 @@ import burgerIngredientsStyles from './burger-ingredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import CardIngredient from '../card-ingredient/card-ingredient.js';
 
+import { IngredientContext, ChoosenIngredientContext } from '../../services/ingredientContext';
+
 function BurgerIngredients(props) {
+  const ingredientsData = React.useContext(IngredientContext);
+
+  // const [choosenIngredients, setChoosenIngrediens] = React.useContext(ChoosenIngredientContext);
+
   const [current, setCurrent] = React.useState('rolls');;
   return (
     <section className={`${burgerIngredientsStyles.ingredients} ml-5 mr-10`}>
@@ -29,7 +35,8 @@ function BurgerIngredients(props) {
         <div className={burgerIngredientsStyles.block}>
           <h2 className='text text_type_main-medium mt-10 mb-6'>Булки</h2>
           <div className={`${burgerIngredientsStyles.container} mr-4`}>
-            {props.data.map(item => {
+            {/* {props.data.map(item => { */}
+            {ingredientsData.map(item => {
               return item.type==='bun' ? <CardIngredient item={item} key={item._id} chooseIngredient={props.chooseIngredient} openModal={props.openModal} /> : null;
             })}
           </div>
@@ -37,7 +44,8 @@ function BurgerIngredients(props) {
         <div className={burgerIngredientsStyles.block}>
           <h2 className='text text_type_main-medium mt-2 mb-6'>Соусы</h2>
           <div className={`${burgerIngredientsStyles.container} mr-4`}>
-            {props.data.map(item => {
+            {/* {props.data.map(item => { */}
+            {ingredientsData.map(item => {
               return item.type==='sauce' ? <CardIngredient item={item} key={item._id} chooseIngredient={props.chooseIngredient} openModal={props.openModal} /> : null;
             })}
           </div>
@@ -45,7 +53,8 @@ function BurgerIngredients(props) {
         <div className={burgerIngredientsStyles.block}>
           <h2 className='text text_type_main-medium mt-2 mb-6'>Начинки</h2>
           <div className={`${burgerIngredientsStyles.container} mr-4`}>
-            {props.data.map(item => {
+            {/* {props.data.map(item => { */}
+            {ingredientsData.map(item => {
               return item.type==='main' ? <CardIngredient item={item} key={item._id} chooseIngredient={props.chooseIngredient} openModal={props.openModal} /> : null;
             })}
           </div>
@@ -55,10 +64,10 @@ function BurgerIngredients(props) {
   )
 }
 
-BurgerIngredients.propTypes = {
-  data: PropTypes.arrayOf(dataPropTypes).isRequired,
-  chooseIngredient: PropTypes.func.isRequired,
-  openModal: PropTypes.func.isRequired,
-}
+// BurgerIngredients.propTypes = {
+//   data: PropTypes.arrayOf(dataPropTypes).isRequired,
+//   chooseIngredient: PropTypes.func.isRequired,
+//   openModal: PropTypes.func.isRequired,
+// }
 
 export default BurgerIngredients;
