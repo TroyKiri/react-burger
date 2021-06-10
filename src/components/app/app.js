@@ -44,14 +44,19 @@ function reducerIngredients(state, action) {
       // return [...state, action]
     default:
       console.log('дошел сюда')
-      return [...state, action]
+      // return [...state, action]
+      return {
+        ...state,
+        data: [...state.data, action]
+        }
   }
 
 }
 
 function App() {
   // const choosenIngredientsState = useState([]);
-  const choosenIngredientsState = useReducer(reducerIngredients, [], undefined);
+  // const choosenIngredientsState = useReducer(reducerIngredients, [], undefined);
+  const choosenIngredientsState = useReducer(reducerIngredients, {data:[], bun:{}}, undefined);
   const [choosenIngredients] = choosenIngredientsState;
   console.log(choosenIngredients);
 
