@@ -28,7 +28,8 @@ function reducerIngredients(state, action) {
       return {
         ...state,
         bun: action,
-        totalPrice: bunPrice ? prevPrice - bunPrice + 2*action.price : prevPrice + 2*action.price
+        totalPrice: bunPrice ? prevPrice - bunPrice + 2*action.price : prevPrice + 2*action.price,
+        ingredients: [...state.ingredients, action._id, action._id]
       }
     default:
       // возвращаем стейт с новыми добавленными ингредиентами и общей цена
@@ -36,6 +37,7 @@ function reducerIngredients(state, action) {
         ...state,
         stuffing: [...state.stuffing, action],
         totalPrice: prevPrice+action.price,
+        ingredients: [...state.ingredients, action._id]
         }
   }
 
@@ -43,7 +45,11 @@ function reducerIngredients(state, action) {
 
 function App() {
   // выбранные ингредиенты
-  const choosenIngredientsState = useReducer(reducerIngredients, {stuffing:[], bun:{}, totalPrice: 0}, undefined);
+  const choosenIngredientsState = useReducer(reducerIngredients, {stuffing:[], bun:{}, totalPrice: 0, ingredients: []}, undefined);
+  
+  const [ing] = choosenIngredientsState;
+  console.log(ing);
+
   // для открытия модалки с нужным ингредиентом
   const [ingredient, setIngredient] = useState({})
   // открытие и закрытие модальных окон

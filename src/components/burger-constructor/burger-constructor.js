@@ -16,6 +16,23 @@ function BurgerConstructor(props) {
   const stuffing = choosenIngredients.stuffing;
   const bun = choosenIngredients.bun;
   const totalPrice = choosenIngredients.totalPrice;
+  const ingredientsId = choosenIngredients.ingredients;
+
+  console.log(ingredientsId)
+
+  function makeOrder() {
+    props.openModal();
+
+    fetch('https://norma.nomoreparties.space/api/orders', {
+      method: 'POST',
+      body: JSON.stringify({ingredients:ingredientsId}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(res => console.log(res))
+  }
 
   return (
     <section className={`${burgerConstructorStyles.container} mr-9 pt-25`}>
@@ -62,7 +79,7 @@ function BurgerConstructor(props) {
           <p className='text text_type_digits-medium mr-2'>{totalPrice}</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium" onClick={props.openModal}>
+        <Button type="primary" size="medium" onClick={makeOrder}>
           Оформить заказ
         </Button>
       </div>
