@@ -18,7 +18,6 @@ function CardIngredient(props) {
   const renderIngredient = () => {
     props.openModal();
     props.chooseIngredient(props.item);
-    // setChoosenIngrediens([...choosenIngredients, props.item]);
     setChoosenIngrediens(props.item);
   }
 

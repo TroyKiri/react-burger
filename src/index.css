@@ -7,6 +7,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.constructor-element__row {
+  width: 488px;
+
+}
 .constructor-element__text {
-  min-width: 253.89px;
+  flex-grow: 1;
 }
