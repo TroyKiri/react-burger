@@ -1,24 +1,21 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-//проверка объекта с определенной структурой
-import dataPropTypes from '../../utils/prop-types';
 
 import burgerConstructorStyles from './burger-constructor.module.css';
 
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
-import { ChoosenIngredientContext } from '../../services/ingredientContext';
+import { ChoosenIngredientContext, OrderNumberContext } from '../../services/ingredientContext';
 
 function BurgerConstructor(props) {
-  const [choosenIngredients] = React.useContext(ChoosenIngredientContext);
-  
+  const [choosenIngredients, dispatchChoosenIngrediens] = React.useContext(ChoosenIngredientContext);
+  const [orderNumber, setOrderNumber] = React.useContext(OrderNumberContext);
+
   const stuffing = choosenIngredients.stuffing;
   const bun = choosenIngredients.bun;
   const totalPrice = choosenIngredients.totalPrice;
   const ingredientsId = choosenIngredients.ingredients;
-
-  console.log(ingredientsId)
 
   function makeOrder() {
     props.openModal();
@@ -30,8 +27,15 @@ function BurgerConstructor(props) {
         'Content-Type': 'application/json'
       }
     })
+      .then(res => {
+        return res.ok ? res : Promise.reject(res.status)
+      })
       .then(res => res.json())
-      .then(res => console.log(res))
+      .then(res => {
+        setOrderNumber(res.order.number);
+        dispatchChoosenIngrediens({type:'reset'})
+      })
+      .catch(e => {console.log(`Ошибка: статус промиса: ${e}`);})
   }
 
   return (
@@ -88,9 +92,8 @@ function BurgerConstructor(props) {
   )
 }
 
-// BurgerConstructor.propTypes = {
-//   data: PropTypes.arrayOf(dataPropTypes).isRequired,
-//   openModal: PropTypes.func.isRequired
-// }
+BurgerConstructor.propTypes = {
+  openModal: PropTypes.func.isRequired
+}
 
 export default BurgerConstructor;

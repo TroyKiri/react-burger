@@ -12,44 +12,47 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 
-import { IngredientContext, ChoosenIngredientContext } from '../../services/ingredientContext';
+import { IngredientContext, ChoosenIngredientContext, OrderNumberContext } from '../../services/ingredientContext';
 
 const BURGER_CONSTRUCTOR = 'burger-constructor';
 const BURGER_INGREDIENT = 'burger-ingredient';
+
+const initialState = {stuffing:[], bun:{}, totalPrice: 0, ingredients: []};
 
 function reducerIngredients(state, action) {
   const bunPrice = 2*state.bun.price; // стоимость булочек
   const stuffingPrice = state.stuffing.reduce((prev, item) => {return prev+=item.price}, 0); // общая стоимость начинок
   const prevPrice = bunPrice ? stuffingPrice + bunPrice : stuffingPrice; // стоимость заказа до добавления очередного ингредиента
 
-  switch (action.type) {
-    case 'bun':
-      // возвращаем стейт с новой булочкой и общей ценой
-      return {
-        ...state,
-        bun: action,
-        totalPrice: bunPrice ? prevPrice - bunPrice + 2*action.price : prevPrice + 2*action.price,
-        ingredients: [...state.ingredients, action._id, action._id]
-      }
-    default:
-      // возвращаем стейт с новыми добавленными ингредиентами и общей цена
-      return {
-        ...state,
-        stuffing: [...state.stuffing, action],
-        totalPrice: prevPrice+action.price,
-        ingredients: [...state.ingredients, action._id]
+  if (action.type === 'addition') {
+    switch (action.item.type) {
+      case 'bun':
+        // возвращаем стейт с новой булочкой и общей ценой
+        return {
+          ...state,
+          bun: action.item,
+          totalPrice: bunPrice ? prevPrice - bunPrice + 2*action.item.price : prevPrice + 2*action.item.price,
+          ingredients: [...state.ingredients, action.item._id, action.item._id]
         }
+      default:
+        // возвращаем стейт с новыми добавленными ингредиентами и общей цена
+        return {
+          ...state,
+          stuffing: [...state.stuffing, action.item],
+          totalPrice: prevPrice+action.item.price,
+          ingredients: [...state.ingredients, action.item._id]
+          }
+    }
+  } else if (action.type === 'reset') {
+    return initialState
   }
 
 }
 
 function App() {
   // выбранные ингредиенты
-  const choosenIngredientsState = useReducer(reducerIngredients, {stuffing:[], bun:{}, totalPrice: 0, ingredients: []}, undefined);
+  const choosenIngredientsState = useReducer(reducerIngredients, initialState, undefined);
   
-  const [ing] = choosenIngredientsState;
-  console.log(ing);
-
   // для открытия модалки с нужным ингредиентом
   const [ingredient, setIngredient] = useState({})
   // открытие и закрытие модальных окон
@@ -63,6 +66,9 @@ function App() {
     hasError: false,
     res: {}
   })
+  // номер заказа
+  const orderNumberState = useState();
+
   // при монтировании вешаем слушатель нажатия на ESC
   useEffect(()=>{
     const escHnalder = (event) => event.key === 'Escape' && closeModal();
@@ -122,20 +128,22 @@ function App() {
     <main className={`${appStyles.page} mb-10`}>
       <AppHeader />
       <IngredientContext.Provider value={data}>
-        <ChoosenIngredientContext.Provider value={choosenIngredientsState}>
-          <section className={appStyles.main}>
-            {!isLoading && !hasError && data && <BurgerIngredients chooseIngredient={chooseIngredient} openModal={openModal(BURGER_INGREDIENT)} />}
-            {!isLoading && !hasError && data && <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />}
-          </section>
-        </ChoosenIngredientContext.Provider>
+        <OrderNumberContext.Provider value={orderNumberState}>
+          <ChoosenIngredientContext.Provider value={choosenIngredientsState}>
+            <section className={appStyles.main}>
+              {!isLoading && !hasError && data && <BurgerIngredients chooseIngredient={chooseIngredient} openModal={openModal(BURGER_INGREDIENT)} />}
+              {!isLoading && !hasError && data && <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />}
+            </section>
+          </ChoosenIngredientContext.Provider>
 
-        {visible.visibleOrder && <Modal onClose={closeModal}><OrderDetails /></Modal>}
-        {
-          visible.visibleIngredient && 
-          <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
-          <IngredientDetails {...ingredient} />
-          </Modal>
-        }
+          {visible.visibleOrder && <Modal onClose={closeModal}><OrderDetails /></Modal>}
+          {
+            visible.visibleIngredient && 
+            <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
+              <IngredientDetails {...ingredient} />
+            </Modal>
+          }  
+        </OrderNumberContext.Provider>
       </IngredientContext.Provider>
     </main>
   )

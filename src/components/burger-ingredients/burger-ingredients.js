@@ -1,8 +1,6 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-//проверка объекта с определенной структурой
-import dataPropTypes from '../../utils/prop-types';
 
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 
@@ -59,10 +57,9 @@ function BurgerIngredients(props) {
   )
 }
 
-// BurgerIngredients.propTypes = {
-//   data: PropTypes.arrayOf(dataPropTypes).isRequired,
-//   chooseIngredient: PropTypes.func.isRequired,
-//   openModal: PropTypes.func.isRequired,
-// }
+BurgerIngredients.propTypes = {
+  chooseIngredient: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
+}
 
 export default BurgerIngredients;
