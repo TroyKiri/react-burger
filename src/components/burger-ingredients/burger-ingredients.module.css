@@ -21,7 +21,6 @@
 
 .container {
   display: flex;
-  max-width: 600px;
   justify-content: space-between;
   flex-wrap: wrap;
 }
