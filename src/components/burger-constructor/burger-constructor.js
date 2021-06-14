@@ -20,8 +20,8 @@ function BurgerConstructor(props) {
   const ingredientsId = choosenIngredients.ingredients;
 
   function makeOrder() {
-    props.openModal();
-
+    // проверяем наличие булочки и хотя бы одной начинки
+    !!stuffing.length && !!Object.keys(bun).length &&
     fetch('https://norma.nomoreparties.space/api/orders', {
       method: 'POST',
       body: JSON.stringify({ingredients:ingredientsId}),
@@ -36,6 +36,7 @@ function BurgerConstructor(props) {
       .then(res => {
         setOrderNumber(res.order.number);
         dispatchChoosenIngrediens({type:RESET})
+        props.openModal();
       })
       .catch(e => {console.log(`Ошибка: статус промиса: ${e}`);})
   }
