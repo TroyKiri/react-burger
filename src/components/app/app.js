@@ -14,6 +14,8 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 
 import { IngredientContext, ChoosenIngredientContext, OrderNumberContext } from '../../services/ingredientContext';
 
+import { ADDITION, RESET } from '../../utils/actionTypes';
+
 const BURGER_CONSTRUCTOR = 'burger-constructor';
 const BURGER_INGREDIENT = 'burger-ingredient';
 
@@ -24,7 +26,7 @@ function reducerIngredients(state, action) {
   const stuffingPrice = state.stuffing.reduce((prev, item) => {return prev+=item.price}, 0); // общая стоимость начинок
   const prevPrice = bunPrice ? stuffingPrice + bunPrice : stuffingPrice; // стоимость заказа до добавления очередного ингредиента
 
-  if (action.type === 'addition') {
+  if (action.type === ADDITION) {
     switch (action.item.type) {
       case 'bun':
         // возвращаем стейт с новой булочкой и общей ценой
@@ -43,10 +45,10 @@ function reducerIngredients(state, action) {
           ingredients: [...state.ingredients, action.item._id]
           }
     }
-  } else if (action.type === 'reset') {
+  } else if (action.type === RESET) {
     return initialState
   }
-
+  return state;
 }
 
 function App() {

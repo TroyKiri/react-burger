@@ -11,6 +11,8 @@ import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import { ChoosenIngredientContext } from '../../services/ingredientContext';
 
+import { ADDITION } from '../../utils/actionTypes';
+
 function CardIngredient(props) {
   const [choosenIngredients, dispatchChoosenIngrediens] = React.useContext(ChoosenIngredientContext);
 
@@ -18,7 +20,7 @@ function CardIngredient(props) {
     props.openModal();
     props.chooseIngredient(props.item);
     // dispatchChoosenIngrediens(props.item);
-    dispatchChoosenIngrediens({type: 'addition', item: props.item});
+    dispatchChoosenIngrediens({type: ADDITION, item: props.item});
   }
 
   return (

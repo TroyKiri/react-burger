@@ -8,6 +8,8 @@ import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktiku
 
 import { ChoosenIngredientContext, OrderNumberContext } from '../../services/ingredientContext';
 
+import { RESET } from '../../utils/actionTypes';
+
 function BurgerConstructor(props) {
   const [choosenIngredients, dispatchChoosenIngrediens] = React.useContext(ChoosenIngredientContext);
   const [orderNumber, setOrderNumber] = React.useContext(OrderNumberContext);
@@ -33,7 +35,7 @@ function BurgerConstructor(props) {
       .then(res => res.json())
       .then(res => {
         setOrderNumber(res.order.number);
-        dispatchChoosenIngrediens({type:'reset'})
+        dispatchChoosenIngrediens({type:RESET})
       })
       .catch(e => {console.log(`Ошибка: статус промиса: ${e}`);})
   }
