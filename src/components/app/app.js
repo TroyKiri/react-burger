@@ -1,8 +1,10 @@
 import { useState, useEffect, useReducer } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getIngredients } from '../../services/actions/actions';
 // стили для компонента App
 import appStyles from './app.module.css';
 // адрес запроса
-import DATA_ID from '../../utils/constants';
+//import DATA_ID from '../../utils/constants';
 // подключение компонентов
 import AppHeader from '../app-header/app-header.js';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients.js';
@@ -63,11 +65,11 @@ function App() {
     visibleIngredient: false
   })
   // стейт загруженных ингредиентов
-  const [state, setState] = useState({
-    isLoading: false,
-    hasError: false,
-    res: {}
-  })
+  // const [state, setState] = useState({
+  //   isLoading: false,
+  //   hasError: false,
+  //   res: {}
+  // })
   // номер заказа
   const orderNumberState = useState();
 
@@ -105,48 +107,61 @@ function App() {
     })
   }
   // получение данных с сервера
-  function getData() {
-    setState({ ...state, isLoading: true })
-    fetch(DATA_ID)
-      .then(res => {
-        return res.ok ? res : Promise.reject(res.status)
-      })
-      .then(res => res.json())
-      .then(res => setState({ ...state, res, isLoading: false }))
-      .catch(e => {
-        console.log(`Ошибка: статус промиса: ${e}`);
-        setState({ ...state, isLoading: false, hasError: true })
-      })
-  }
+  // function getData() {
+  //   setState({ ...state, isLoading: true })
+  //   fetch(DATA_ID)
+  //     .then(res => {
+  //       return res.ok ? res : Promise.reject(res.status)
+  //     })
+  //     .then(res => res.json())
+  //     .then(res => setState({ ...state, res, isLoading: false }))
+  //     .catch(e => {
+  //       console.log(`Ошибка: статус промиса: ${e}`);
+  //       setState({ ...state, isLoading: false, hasError: true })
+  //     })
+  // }
   // используем getData() при монтировании
-  useEffect(() => {
-    getData()
-  }, [])
+  // useEffect(() => {
+  //   getData()
+  // }, [])
 
-  const data = state.res.data;
-  const { isLoading, hasError } = state;
+  // const data = state.res.data;
+  // const { isLoading, hasError } = state;
+
+  const { ingredientsRequest, ingredientsFailed } = useSelector(store => store.ingredientReducer);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getIngredients())
+  }, []);
 
   return (
     <main className={`${appStyles.page} mb-10`}>
       <AppHeader />
-      <IngredientContext.Provider value={data}>
-        <OrderNumberContext.Provider value={orderNumberState}>
-          <ChoosenIngredientContext.Provider value={choosenIngredientsState}>
-            <section className={appStyles.main}>
-              {!isLoading && !hasError && data && <BurgerIngredients chooseIngredient={chooseIngredient} openModal={openModal(BURGER_INGREDIENT)} />}
-              {!isLoading && !hasError && data && <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />}
-            </section>
-          </ChoosenIngredientContext.Provider>
+      {/* <IngredientContext.Provider value={data}> */}
+      <OrderNumberContext.Provider value={orderNumberState}>
+        <ChoosenIngredientContext.Provider value={choosenIngredientsState}>
+          <section className={appStyles.main}>
+            {ingredientsFailed ? <p>Произошла ошибка при получении данных</p> : ingredientsRequest ? <p>Загрузка...</p> :
+              <>
+                <BurgerIngredients chooseIngredient={chooseIngredient} openModal={openModal(BURGER_INGREDIENT)} />
+                <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />
+              </>
+            }
+            {/* {!isLoading && !hasError && data && <BurgerIngredients chooseIngredient={chooseIngredient} openModal={openModal(BURGER_INGREDIENT)} />} */}
+            {/* {!isLoading && !hasError && data && <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />} */}
+          </section>
+        </ChoosenIngredientContext.Provider>
 
-          {visible.visibleOrder && <Modal onClose={closeModal}><OrderDetails /></Modal>}
-          {
-            visible.visibleIngredient &&
-            <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
-              <IngredientDetails {...ingredient} />
-            </Modal>
-          }
-        </OrderNumberContext.Provider>
-      </IngredientContext.Provider>
+        {visible.visibleOrder && <Modal onClose={closeModal}><OrderDetails /></Modal>}
+        {
+          visible.visibleIngredient &&
+          <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
+            <IngredientDetails {...ingredient} />
+          </Modal>
+        }
+      </OrderNumberContext.Provider>
+      {/* </IngredientContext.Provider> */}
     </main>
   )
 }
