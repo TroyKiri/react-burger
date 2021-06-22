@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import PropTypes from 'prop-types';
 
@@ -11,34 +12,41 @@ import { ChoosenIngredientContext, OrderNumberContext } from '../../services/ing
 import { RESET } from '../../utils/actionTypes';
 
 function BurgerConstructor(props) {
-  const [choosenIngredients, dispatchChoosenIngrediens] = React.useContext(ChoosenIngredientContext);
+  //const [choosenIngredients, dispatchChoosenIngrediens] = React.useContext(ChoosenIngredientContext);
   const [orderNumber, setOrderNumber] = React.useContext(OrderNumberContext);
 
-  const stuffing = choosenIngredients.stuffing;
-  const bun = choosenIngredients.bun;
-  const totalPrice = choosenIngredients.totalPrice;
-  const ingredientsId = choosenIngredients.ingredients;
+  // const stuffing = choosenIngredients.stuffing;
+  // const bun = choosenIngredients.bun;
+  // const totalPrice = choosenIngredients.totalPrice;
+  //const ingredientsId = choosenIngredients.ingredients;
+
+  const { stuffing, bun, totalPrice, ingredientsId } = useSelector(store => store.ingredientReducer.constructorIngredients)
+
+  const dispatch = useDispatch();
 
   function makeOrder() {
     // проверяем наличие булочки и хотя бы одной начинки
     !!stuffing.length && !!Object.keys(bun).length &&
-    fetch('https://norma.nomoreparties.space/api/orders', {
-      method: 'POST',
-      body: JSON.stringify({ingredients:ingredientsId}),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => {
-        return res.ok ? res : Promise.reject(res.status)
+      fetch('https://norma.nomoreparties.space/api/orders', {
+        method: 'POST',
+        body: JSON.stringify({ ingredients: ingredientsId }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       })
-      .then(res => res.json())
-      .then(res => {
-        setOrderNumber(res.order.number);
-        dispatchChoosenIngrediens({type:RESET})
-        props.openModal();
-      })
-      .catch(e => {console.log(`Ошибка: статус промиса: ${e}`);})
+        .then(res => {
+          return res.ok ? res : Promise.reject(res.status)
+        })
+        .then(res => res.json())
+        .then(res => {
+          setOrderNumber(res.order.number);
+          // dispatchChoosenIngrediens({ type: RESET })
+
+          dispatch({ type: RESET })
+
+          props.openModal();
+        })
+        .catch(e => { console.log(`Ошибка: статус промиса: ${e}`); })
   }
 
   return (
@@ -56,7 +64,7 @@ function BurgerConstructor(props) {
       {!!stuffing.length ? (<div className={burgerConstructorStyles.scrollbar}>
         <ul className={burgerConstructorStyles.listContainer}>
           {!!stuffing.length && stuffing.map((item, index) => {
-            return (item.type !== 'bun' && 
+            return (item.type !== 'bun' &&
               <li key={index} className={`${burgerConstructorStyles.listElement} mr-2`}>
                 <div className='mr-2'>
                   <DragIcon type="primary" />
@@ -65,7 +73,7 @@ function BurgerConstructor(props) {
                   text={item.name}
                   price={item.price}
                   thumbnail={item.image}
-                  key={item._id} 
+                  key={item._id}
                 />
               </li>)
           })}
@@ -91,7 +99,7 @@ function BurgerConstructor(props) {
         </Button>
       </div>
     </section>
-    
+
   )
 }
 

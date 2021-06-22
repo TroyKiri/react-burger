@@ -16,46 +16,46 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 
 import { IngredientContext, ChoosenIngredientContext, OrderNumberContext } from '../../services/ingredientContext';
 
-import { ADDITION, RESET } from '../../utils/actionTypes';
+//import { ADDITION, RESET } from '../../utils/actionTypes';
 
 const BURGER_CONSTRUCTOR = 'burger-constructor';
 const BURGER_INGREDIENT = 'burger-ingredient';
 
-const initialState = { stuffing: [], bun: {}, totalPrice: 0, ingredients: [] };
+//const initialState = { stuffing: [], bun: {}, totalPrice: 0, ingredients: [] };
 
-function reducerIngredients(state, action) {
-  const bunPrice = 2 * state.bun.price; // стоимость булочек
-  const stuffingPrice = state.stuffing.reduce((prev, item) => { return prev += item.price }, 0); // общая стоимость начинок
-  const prevPrice = bunPrice ? stuffingPrice + bunPrice : stuffingPrice; // стоимость заказа до добавления очередного ингредиента
+// function reducerIngredients(state, action) {
+//   const bunPrice = 2 * state.bun.price; // стоимость булочек
+//   const stuffingPrice = state.stuffing.reduce((prev, item) => { return prev += item.price }, 0); // общая стоимость начинок
+//   const prevPrice = bunPrice ? stuffingPrice + bunPrice : stuffingPrice; // стоимость заказа до добавления очередного ингредиента
 
-  if (action.type === ADDITION) {
-    switch (action.item.type) {
-      case 'bun':
-        // возвращаем стейт с новой булочкой и общей ценой
-        return {
-          ...state,
-          bun: action.item,
-          totalPrice: bunPrice ? prevPrice - bunPrice + 2 * action.item.price : prevPrice + 2 * action.item.price,
-          ingredients: [...state.ingredients, action.item._id, action.item._id]
-        }
-      default:
-        // возвращаем стейт с новыми добавленными ингредиентами и общей цена
-        return {
-          ...state,
-          stuffing: [...state.stuffing, action.item],
-          totalPrice: prevPrice + action.item.price,
-          ingredients: [...state.ingredients, action.item._id]
-        }
-    }
-  } else if (action.type === RESET) {
-    return initialState
-  }
-  return state;
-}
+//   if (action.type === ADDITION) {
+//     switch (action.item.type) {
+//       case 'bun':
+//         // возвращаем стейт с новой булочкой и общей ценой
+//         return {
+//           ...state,
+//           bun: action.item,
+//           totalPrice: bunPrice ? prevPrice - bunPrice + 2 * action.item.price : prevPrice + 2 * action.item.price,
+//           ingredients: [...state.ingredients, action.item._id, action.item._id]
+//         }
+//       default:
+//         // возвращаем стейт с новыми добавленными ингредиентами и общей цена
+//         return {
+//           ...state,
+//           stuffing: [...state.stuffing, action.item],
+//           totalPrice: prevPrice + action.item.price,
+//           ingredients: [...state.ingredients, action.item._id]
+//         }
+//     }
+//   } else if (action.type === RESET) {
+//     return initialState
+//   }
+//   return state;
+// }
 
 function App() {
   // выбранные ингредиенты
-  const choosenIngredientsState = useReducer(reducerIngredients, initialState, undefined);
+  //const choosenIngredientsState = useReducer(reducerIngredients, initialState, undefined);
 
   // для открытия модалки с нужным ингредиентом
   const [ingredient, setIngredient] = useState({})
@@ -140,18 +140,18 @@ function App() {
       <AppHeader />
       {/* <IngredientContext.Provider value={data}> */}
       <OrderNumberContext.Provider value={orderNumberState}>
-        <ChoosenIngredientContext.Provider value={choosenIngredientsState}>
-          <section className={appStyles.main}>
-            {ingredientsFailed ? <p>Произошла ошибка при получении данных</p> : ingredientsRequest ? <p>Загрузка...</p> :
-              <>
-                <BurgerIngredients chooseIngredient={chooseIngredient} openModal={openModal(BURGER_INGREDIENT)} />
-                <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />
-              </>
-            }
-            {/* {!isLoading && !hasError && data && <BurgerIngredients chooseIngredient={chooseIngredient} openModal={openModal(BURGER_INGREDIENT)} />} */}
-            {/* {!isLoading && !hasError && data && <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />} */}
-          </section>
-        </ChoosenIngredientContext.Provider>
+        {/* <ChoosenIngredientContext.Provider value={choosenIngredientsState}> */}
+        <section className={appStyles.main}>
+          {ingredientsFailed ? <p>Произошла ошибка при получении данных</p> : ingredientsRequest ? <p>Загрузка...</p> :
+            <>
+              <BurgerIngredients chooseIngredient={chooseIngredient} openModal={openModal(BURGER_INGREDIENT)} />
+              <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />
+            </>
+          }
+          {/* {!isLoading && !hasError && data && <BurgerIngredients chooseIngredient={chooseIngredient} openModal={openModal(BURGER_INGREDIENT)} />} */}
+          {/* {!isLoading && !hasError && data && <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />} */}
+        </section>
+        {/* </ChoosenIngredientContext.Provider> */}
 
         {visible.visibleOrder && <Modal onClose={closeModal}><OrderDetails /></Modal>}
         {
