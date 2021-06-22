@@ -1,9 +1,9 @@
 import { useState, useEffect, useReducer } from 'react';
-
+// стили для компонента App
 import appStyles from './app.module.css';
-
+// адрес запроса
 import DATA_ID from '../../utils/constants';
-
+// подключение компонентов
 import AppHeader from '../app-header/app-header.js';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients.js';
 import BurgerConstructor from '../burger-constructor/burger-constructor.js';
@@ -19,11 +19,11 @@ import { ADDITION, RESET } from '../../utils/actionTypes';
 const BURGER_CONSTRUCTOR = 'burger-constructor';
 const BURGER_INGREDIENT = 'burger-ingredient';
 
-const initialState = {stuffing:[], bun:{}, totalPrice: 0, ingredients: []};
+const initialState = { stuffing: [], bun: {}, totalPrice: 0, ingredients: [] };
 
 function reducerIngredients(state, action) {
-  const bunPrice = 2*state.bun.price; // стоимость булочек
-  const stuffingPrice = state.stuffing.reduce((prev, item) => {return prev+=item.price}, 0); // общая стоимость начинок
+  const bunPrice = 2 * state.bun.price; // стоимость булочек
+  const stuffingPrice = state.stuffing.reduce((prev, item) => { return prev += item.price }, 0); // общая стоимость начинок
   const prevPrice = bunPrice ? stuffingPrice + bunPrice : stuffingPrice; // стоимость заказа до добавления очередного ингредиента
 
   if (action.type === ADDITION) {
@@ -33,7 +33,7 @@ function reducerIngredients(state, action) {
         return {
           ...state,
           bun: action.item,
-          totalPrice: bunPrice ? prevPrice - bunPrice + 2*action.item.price : prevPrice + 2*action.item.price,
+          totalPrice: bunPrice ? prevPrice - bunPrice + 2 * action.item.price : prevPrice + 2 * action.item.price,
           ingredients: [...state.ingredients, action.item._id, action.item._id]
         }
       default:
@@ -41,9 +41,9 @@ function reducerIngredients(state, action) {
         return {
           ...state,
           stuffing: [...state.stuffing, action.item],
-          totalPrice: prevPrice+action.item.price,
+          totalPrice: prevPrice + action.item.price,
           ingredients: [...state.ingredients, action.item._id]
-          }
+        }
     }
   } else if (action.type === RESET) {
     return initialState
@@ -54,7 +54,7 @@ function reducerIngredients(state, action) {
 function App() {
   // выбранные ингредиенты
   const choosenIngredientsState = useReducer(reducerIngredients, initialState, undefined);
-  
+
   // для открытия модалки с нужным ингредиентом
   const [ingredient, setIngredient] = useState({})
   // открытие и закрытие модальных окон
@@ -72,7 +72,7 @@ function App() {
   const orderNumberState = useState();
 
   // при монтировании вешаем слушатель нажатия на ESC
-  useEffect(()=>{
+  useEffect(() => {
     const escHnalder = (event) => event.key === 'Escape' && closeModal();
     document.addEventListener('keydown', escHnalder);
 
@@ -106,16 +106,16 @@ function App() {
   }
   // получение данных с сервера
   function getData() {
-    setState({...state, isLoading:true})
+    setState({ ...state, isLoading: true })
     fetch(DATA_ID)
       .then(res => {
         return res.ok ? res : Promise.reject(res.status)
       })
       .then(res => res.json())
-      .then(res => setState({...state, res, isLoading: false}))
+      .then(res => setState({ ...state, res, isLoading: false }))
       .catch(e => {
         console.log(`Ошибка: статус промиса: ${e}`);
-        setState({...state, isLoading: false, hasError: true})
+        setState({ ...state, isLoading: false, hasError: true })
       })
   }
   // используем getData() при монтировании
@@ -140,11 +140,11 @@ function App() {
 
           {visible.visibleOrder && <Modal onClose={closeModal}><OrderDetails /></Modal>}
           {
-            visible.visibleIngredient && 
+            visible.visibleIngredient &&
             <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
               <IngredientDetails {...ingredient} />
             </Modal>
-          }  
+          }
         </OrderNumberContext.Provider>
       </IngredientContext.Provider>
     </main>
