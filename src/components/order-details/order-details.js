@@ -1,9 +1,9 @@
-import React from 'react';
+import { useSelector } from 'react-redux';
 import doneImage from '../../images/done.svg';
-import { OrderNumberContext } from '../../services/ingredientContext';
 
 function OrderDetails() {
-  const [orderNumber] = React.useContext(OrderNumberContext)
+  const { orderNumber } = useSelector(store => store.ingredientReducer)
+
   return (
     <>
       <p className='text text_type_digits-large mt-20 mb-8'>{orderNumber}</p>

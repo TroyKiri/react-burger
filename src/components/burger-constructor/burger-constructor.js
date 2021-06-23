@@ -1,5 +1,5 @@
-import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { getOrderNumber } from '../../services/actions/actions';
 
 import PropTypes from 'prop-types';
 
@@ -7,46 +7,14 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
-import { ChoosenIngredientContext, OrderNumberContext } from '../../services/ingredientContext';
-
-import { RESET } from '../../utils/actionTypes';
-
 function BurgerConstructor(props) {
-  //const [choosenIngredients, dispatchChoosenIngrediens] = React.useContext(ChoosenIngredientContext);
-  const [orderNumber, setOrderNumber] = React.useContext(OrderNumberContext);
-
-  // const stuffing = choosenIngredients.stuffing;
-  // const bun = choosenIngredients.bun;
-  // const totalPrice = choosenIngredients.totalPrice;
-  //const ingredientsId = choosenIngredients.ingredients;
-
   const { stuffing, bun, totalPrice, ingredientsId } = useSelector(store => store.ingredientReducer.constructorIngredients)
-
   const dispatch = useDispatch();
 
   function makeOrder() {
     // проверяем наличие булочки и хотя бы одной начинки
     !!stuffing.length && !!Object.keys(bun).length &&
-      fetch('https://norma.nomoreparties.space/api/orders', {
-        method: 'POST',
-        body: JSON.stringify({ ingredients: ingredientsId }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(res => {
-          return res.ok ? res : Promise.reject(res.status)
-        })
-        .then(res => res.json())
-        .then(res => {
-          setOrderNumber(res.order.number);
-          // dispatchChoosenIngrediens({ type: RESET })
-
-          dispatch({ type: RESET })
-
-          props.openModal();
-        })
-        .catch(e => { console.log(`Ошибка: статус промиса: ${e}`); })
+      dispatch(getOrderNumber(ingredientsId, props.openModal))
   }
 
   return (
@@ -99,7 +67,6 @@ function BurgerConstructor(props) {
         </Button>
       </div>
     </section>
-
   )
 }
 

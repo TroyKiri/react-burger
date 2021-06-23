@@ -1,10 +1,8 @@
-import { useState, useEffect, useReducer } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getIngredients } from '../../services/actions/actions';
+import { getIngredients, DELETE_INGREDIENT } from '../../services/actions/actions';
 // стили для компонента App
 import appStyles from './app.module.css';
-// адрес запроса
-//import DATA_ID from '../../utils/constants';
 // подключение компонентов
 import AppHeader from '../app-header/app-header.js';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients.js';
@@ -14,65 +12,17 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 
-import { IngredientContext, ChoosenIngredientContext, OrderNumberContext } from '../../services/ingredientContext';
-
-//import { ADDITION, RESET } from '../../utils/actionTypes';
-
-const BURGER_CONSTRUCTOR = 'burger-constructor';
-const BURGER_INGREDIENT = 'burger-ingredient';
-
-//const initialState = { stuffing: [], bun: {}, totalPrice: 0, ingredients: [] };
-
-// function reducerIngredients(state, action) {
-//   const bunPrice = 2 * state.bun.price; // стоимость булочек
-//   const stuffingPrice = state.stuffing.reduce((prev, item) => { return prev += item.price }, 0); // общая стоимость начинок
-//   const prevPrice = bunPrice ? stuffingPrice + bunPrice : stuffingPrice; // стоимость заказа до добавления очередного ингредиента
-
-//   if (action.type === ADDITION) {
-//     switch (action.item.type) {
-//       case 'bun':
-//         // возвращаем стейт с новой булочкой и общей ценой
-//         return {
-//           ...state,
-//           bun: action.item,
-//           totalPrice: bunPrice ? prevPrice - bunPrice + 2 * action.item.price : prevPrice + 2 * action.item.price,
-//           ingredients: [...state.ingredients, action.item._id, action.item._id]
-//         }
-//       default:
-//         // возвращаем стейт с новыми добавленными ингредиентами и общей цена
-//         return {
-//           ...state,
-//           stuffing: [...state.stuffing, action.item],
-//           totalPrice: prevPrice + action.item.price,
-//           ingredients: [...state.ingredients, action.item._id]
-//         }
-//     }
-//   } else if (action.type === RESET) {
-//     return initialState
-//   }
-//   return state;
-// }
+import { BURGER_CONSTRUCTOR, BURGER_INGREDIENT } from '../../utils/constants';
 
 function App() {
-  // выбранные ингредиенты
-  //const choosenIngredientsState = useReducer(reducerIngredients, initialState, undefined);
+  const { ingredientsRequest, ingredientsFailed } = useSelector(store => store.ingredientReducer);
+  const dispatch = useDispatch();
 
-  // для открытия модалки с нужным ингредиентом
-  const [ingredient, setIngredient] = useState({})
   // открытие и закрытие модальных окон
   const [visible, setVisible] = useState({
     visibleOrder: false,
     visibleIngredient: false
   })
-  // стейт загруженных ингредиентов
-  // const [state, setState] = useState({
-  //   isLoading: false,
-  //   hasError: false,
-  //   res: {}
-  // })
-  // номер заказа
-  const orderNumberState = useState();
-
   // при монтировании вешаем слушатель нажатия на ESC
   useEffect(() => {
     const escHnalder = (event) => event.key === 'Escape' && closeModal();
@@ -81,10 +31,6 @@ function App() {
     return () => document.removeEventListener('keydown', escHnalder);
   }, []);
 
-  // изменения состояния для открытия модального окна с выбранным ингредиентом
-  const chooseIngredient = (item) => {
-    setIngredient(item)
-  }
   // открытие модальных окон
   const openModal = (target) => () => {
     if (target === BURGER_CONSTRUCTOR) {
@@ -99,37 +45,15 @@ function App() {
       });
     }
   }
+
   // закрытие модальных окон
   const closeModal = () => {
     setVisible({
       visibleOrder: false,
       visibleIngredient: false
     })
+    dispatch({ type: DELETE_INGREDIENT })
   }
-  // получение данных с сервера
-  // function getData() {
-  //   setState({ ...state, isLoading: true })
-  //   fetch(DATA_ID)
-  //     .then(res => {
-  //       return res.ok ? res : Promise.reject(res.status)
-  //     })
-  //     .then(res => res.json())
-  //     .then(res => setState({ ...state, res, isLoading: false }))
-  //     .catch(e => {
-  //       console.log(`Ошибка: статус промиса: ${e}`);
-  //       setState({ ...state, isLoading: false, hasError: true })
-  //     })
-  // }
-  // используем getData() при монтировании
-  // useEffect(() => {
-  //   getData()
-  // }, [])
-
-  // const data = state.res.data;
-  // const { isLoading, hasError } = state;
-
-  const { ingredientsRequest, ingredientsFailed } = useSelector(store => store.ingredientReducer);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getIngredients())
@@ -138,30 +62,22 @@ function App() {
   return (
     <main className={`${appStyles.page} mb-10`}>
       <AppHeader />
-      {/* <IngredientContext.Provider value={data}> */}
-      <OrderNumberContext.Provider value={orderNumberState}>
-        {/* <ChoosenIngredientContext.Provider value={choosenIngredientsState}> */}
-        <section className={appStyles.main}>
-          {ingredientsFailed ? <p>Произошла ошибка при получении данных</p> : ingredientsRequest ? <p>Загрузка...</p> :
-            <>
-              <BurgerIngredients chooseIngredient={chooseIngredient} openModal={openModal(BURGER_INGREDIENT)} />
-              <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />
-            </>
-          }
-          {/* {!isLoading && !hasError && data && <BurgerIngredients chooseIngredient={chooseIngredient} openModal={openModal(BURGER_INGREDIENT)} />} */}
-          {/* {!isLoading && !hasError && data && <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />} */}
-        </section>
-        {/* </ChoosenIngredientContext.Provider> */}
-
-        {visible.visibleOrder && <Modal onClose={closeModal}><OrderDetails /></Modal>}
-        {
-          visible.visibleIngredient &&
-          <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
-            <IngredientDetails {...ingredient} />
-          </Modal>
+      <section className={appStyles.main}>
+        {ingredientsFailed ? <p>Произошла ошибка при получении данных</p> : ingredientsRequest ? <p>Загрузка...</p> :
+          <>
+            <BurgerIngredients openModal={openModal(BURGER_INGREDIENT)} />
+            <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />
+          </>
         }
-      </OrderNumberContext.Provider>
-      {/* </IngredientContext.Provider> */}
+      </section>
+
+      {visible.visibleOrder && <Modal onClose={closeModal}><OrderDetails /></Modal>}
+      {
+        visible.visibleIngredient &&
+        <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
+          <IngredientDetails />
+        </Modal>
+      }
     </main>
   )
 }

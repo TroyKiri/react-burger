@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
-
-import { useSelector, useDispatch } from 'react-redux';
-import { getIngredients } from '../../services/actions/actions';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
 import PropTypes from 'prop-types';
 
@@ -11,17 +9,8 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import CardIngredient from '../card-ingredient/card-ingredient.js';
 
-//import { IngredientContext } from '../../services/ingredientContext';
-
 function BurgerIngredients(props) {
-  //const ingredientsData = React.useContext(IngredientContext);
-
   const { ingredients } = useSelector(store => store.ingredientReducer);
-  // const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   dispatch(getIngredients())
-  // }, []);
 
   const [current, setCurrent] = React.useState('rolls');
 
@@ -70,7 +59,6 @@ function BurgerIngredients(props) {
 }
 
 BurgerIngredients.propTypes = {
-  chooseIngredient: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
 }
 

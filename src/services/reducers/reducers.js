@@ -4,7 +4,14 @@ import {
   GET_INGREDIENTS_FAILED,
 
   RESET,
-  ADDITION
+  ADDITION,
+
+  CHOOSE_INGREDIENT,
+  DELETE_INGREDIENT,
+
+  GET_ORDER_NUMBER_REQUEST,
+  GET_ORDER_NUMBER_SUCCESS,
+  GET_ORDER_NUMBER_FAILED
 } from '../actions/actions';
 
 //Исходное состояние
@@ -20,7 +27,10 @@ const initialState = {
     ingredientsId: []
   },
   currentIngredient: {},
-  orderInfo: []
+
+  orderNumber: 0,
+  orderNumberRequest: false,
+  orderNumberFailed: false
 }
 
 const ingredientReducer = (state = initialState, action) => {
@@ -77,6 +87,39 @@ const ingredientReducer = (state = initialState, action) => {
       return {
         ...state,
         constructorIngredients: initialState.constructorIngredients
+      }
+    }
+    case CHOOSE_INGREDIENT: {
+      return {
+        ...state,
+        currentIngredient: action.item,
+      }
+    }
+    case DELETE_INGREDIENT: {
+      return {
+        ...state,
+        currentIngredient: initialState.currentIngredient
+      }
+    }
+    case GET_ORDER_NUMBER_REQUEST: {
+      return {
+        ...state,
+        orderNumberRequest: true
+      }
+    }
+    case GET_ORDER_NUMBER_SUCCESS: {
+      return {
+        ...state,
+        orderNumberRequest: false,
+        orderNumberFailed: false,
+        orderNumber: action.number
+      }
+    }
+    case GET_ORDER_NUMBER_FAILED: {
+      return {
+        ...state,
+        orderNumberRequest: false,
+        orderNumberFailed: true,
       }
     }
     default: {
