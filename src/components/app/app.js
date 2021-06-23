@@ -60,7 +60,7 @@ function App() {
   }, []);
 
   return (
-    <main className={`${appStyles.page} mb-10`}>
+    <main className={`${appStyles.page}`}>
       <AppHeader />
       <section className={appStyles.main}>
         {ingredientsFailed ? <p>Произошла ошибка при получении данных</p> : ingredientsRequest ? <p>Загрузка...</p> :
