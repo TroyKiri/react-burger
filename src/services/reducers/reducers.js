@@ -2,18 +2,16 @@ import {
   GET_INGREDIENTS_REQUEST,
   GET_INGREDIENTS_SUCCESS,
   GET_INGREDIENTS_FAILED,
-
   RESET,
   ADDITION,
   DELETE_INGREDIENT_FROM_CONSTRUCTOR,
-
   CHOOSE_INGREDIENT,
   DELETE_INGREDIENT,
-
   GET_ORDER_NUMBER_REQUEST,
   GET_ORDER_NUMBER_SUCCESS,
-  GET_ORDER_NUMBER_FAILED
-} from '../actions/actions';
+  GET_ORDER_NUMBER_FAILED,
+  SWAP,
+} from "../actions/actions";
 
 //Исходное состояние
 const initialState = {
@@ -25,56 +23,67 @@ const initialState = {
     stuffing: [],
     bun: {},
     totalPrice: 0,
-    ingredientsId: []
+    ingredientsId: [],
   },
   currentIngredient: {},
 
   orderNumber: 0,
   orderNumberRequest: false,
-  orderNumberFailed: false
-}
+  orderNumberFailed: false,
+};
 
 const ingredientReducer = (state = initialState, action) => {
   const bunPrice = 2 * state.constructorIngredients.bun.price; // стоимость булочек
-  const stuffingPrice = state.constructorIngredients.stuffing.reduce((prev, item) => { return prev += item.price }, 0); // общая стоимость начинок
+  const stuffingPrice = state.constructorIngredients.stuffing.reduce(
+    (prev, item) => {
+      return (prev += item.price);
+    },
+    0
+  ); // общая стоимость начинок
   const prevPrice = bunPrice ? stuffingPrice + bunPrice : stuffingPrice; // стоимость заказа до добавления очередного ингредиента
 
   switch (action.type) {
     case GET_INGREDIENTS_REQUEST: {
       return {
         ...state,
-        ingredientsRequest: true
-      }
+        ingredientsRequest: true,
+      };
     }
     case GET_INGREDIENTS_SUCCESS: {
       return {
         ...state,
         ingredientsRequest: false,
         ingredientsFailed: false,
-        ingredients: action.ingredients
-      }
+        ingredients: action.ingredients,
+      };
     }
     case GET_INGREDIENTS_FAILED: {
       return {
         ...state,
         ingredientsRequest: false,
         ingredientsFailed: true,
-      }
+      };
     }
     case ADDITION: {
-      if (action.item.type === 'bun') {
+      if (action.item.type === "bun") {
         return {
           ...state,
           constructorIngredients: {
             ...state.constructorIngredients,
             bun: {
               ...action.item,
-              countBun: 2
+              countBun: 2,
             },
-            totalPrice: bunPrice ? prevPrice - bunPrice + 2 * action.item.price : prevPrice + 2 * action.item.price,
-            ingredientsId: [...state.constructorIngredients.ingredientsId, action.item._id, action.item._id]
-          }
-        }
+            totalPrice: bunPrice
+              ? prevPrice - bunPrice + 2 * action.item.price
+              : prevPrice + 2 * action.item.price,
+            ingredientsId: [
+              ...state.constructorIngredients.ingredientsId,
+              action.item._id,
+              action.item._id,
+            ],
+          },
+        };
       } else {
         const countStuff = 1;
         return {
@@ -85,68 +94,104 @@ const ingredientReducer = (state = initialState, action) => {
               ...state.constructorIngredients.stuffing,
               {
                 ...action.item,
-                count: countStuff
-              }
+                count: countStuff,
+              },
             ],
             totalPrice: prevPrice + action.item.price,
-            ingredientsId: [...state.constructorIngredients.ingredientsId, action.item._id]
-          }
-        }
+            ingredientsId: [
+              ...state.constructorIngredients.ingredientsId,
+              action.item._id,
+            ],
+          },
+        };
       }
     }
     case RESET: {
       return {
         ...state,
-        constructorIngredients: initialState.constructorIngredients
-      }
+        constructorIngredients: initialState.constructorIngredients,
+      };
     }
     case DELETE_INGREDIENT_FROM_CONSTRUCTOR: {
       return {
         ...state,
         constructorIngredients: {
           ...state.constructorIngredients,
-          stuffing: [...state.constructorIngredients.stuffing.filter((item, index) => index !== action.index)],
-          totalPrice: !!state.constructorIngredients.stuffing.length ? prevPrice - state.constructorIngredients.stuffing.find((item, index) => index === action.index).price : 0,
-        }
-      }
+          stuffing: [
+            ...state.constructorIngredients.stuffing.filter(
+              (item, index) => index !== action.index
+            ),
+          ],
+          totalPrice: !!state.constructorIngredients.stuffing.length
+            ? prevPrice -
+              state.constructorIngredients.stuffing.find(
+                (item, index) => index === action.index
+              ).price
+            : 0,
+        },
+      };
     }
     case CHOOSE_INGREDIENT: {
       return {
         ...state,
         currentIngredient: action.item,
-      }
+      };
     }
     case DELETE_INGREDIENT: {
       return {
         ...state,
-        currentIngredient: initialState.currentIngredient
-      }
+        currentIngredient: initialState.currentIngredient,
+      };
     }
     case GET_ORDER_NUMBER_REQUEST: {
       return {
         ...state,
-        orderNumberRequest: true
-      }
+        orderNumberRequest: true,
+      };
     }
     case GET_ORDER_NUMBER_SUCCESS: {
       return {
         ...state,
         orderNumberRequest: false,
         orderNumberFailed: false,
-        orderNumber: action.number
-      }
+        orderNumber: action.number,
+      };
     }
     case GET_ORDER_NUMBER_FAILED: {
       return {
         ...state,
         orderNumberRequest: false,
         orderNumberFailed: true,
-      }
+      };
+    }
+    case SWAP: {
+      const arr = [...state.constructorIngredients.stuffing];
+      const dragIndex = action.dragIndex;
+      const hoverIndex = action.hoverIndex;
+
+      const dragElement = arr[dragIndex];
+      const hoverElement = arr[hoverIndex];
+
+      arr[hoverIndex] = dragElement;
+      arr[dragIndex] = hoverElement;
+
+      return {
+        ...state,
+        constructorIngredients: {
+          ...state.constructorIngredients,
+          stuffing: arr,
+          // stuffing: [
+          //   ...arr,
+          //   (arr[hoverIndex] = dragElement),
+          //   (arr[dragIndex] = hoverElement),
+          // ],
+        },
+      };
     }
     default: {
-      return state
+      return state;
     }
   }
-}
+};
 
 export default ingredientReducer;
