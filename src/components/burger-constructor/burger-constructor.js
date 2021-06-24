@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 
 import burgerConstructorStyles from './burger-constructor.module.css';
 
+import ConstructorItem from '../constructor-item/constructor-item';
+
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 function BurgerConstructor(props) {
@@ -56,18 +58,8 @@ function BurgerConstructor(props) {
         <ul className={burgerConstructorStyles.listContainer}>
           {!!stuffing.length && stuffing.map((item, index) => {
             return (item.type !== 'bun' &&
-              <li key={index} className={`${burgerConstructorStyles.listElement} mr-2`}>
-                <div className='mr-2'>
-                  <DragIcon type="primary" />
-                </div>
-                <ConstructorElement
-                  text={item.name}
-                  price={item.price}
-                  thumbnail={item.image}
-                  key={item._id}
-                  handleClose={() => deleteIngredient(index)}
-                />
-              </li>)
+              <ConstructorItem item={item} index={index} />
+            )
           })}
         </ul>
       </div>) : <div className={burgerConstructorStyles.emtyContainer}></div>}
