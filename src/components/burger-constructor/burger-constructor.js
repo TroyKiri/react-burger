@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { getOrderNumber } from '../../services/actions/actions';
+import { useDrop } from "react-dnd";
+import { getOrderNumber, ADDITION } from '../../services/actions/actions';
 
 import PropTypes from 'prop-types';
 
@@ -8,6 +9,21 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 import { ConstructorElement, DragIcon, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 function BurgerConstructor(props) {
+  const [{ isHover }, dropTarget] = useDrop({
+    accept: "ingredient",
+    drop(ingredient) {
+      dispatch({
+        type: ADDITION,
+        item: ingredient
+      })
+    },
+    collect: monitor => ({
+      isHover: monitor.isOver(),
+    })
+  });
+
+  const border = isHover && '2px solid #4C4CFF';
+
   const { stuffing, bun, totalPrice, ingredientsId } = useSelector(store => store.ingredientReducer.constructorIngredients)
   const dispatch = useDispatch();
 
@@ -18,7 +34,7 @@ function BurgerConstructor(props) {
   }
 
   return (
-    <section className={`${burgerConstructorStyles.container} mr-9 pt-25`}>
+    <section className={`${burgerConstructorStyles.container} mr-9 pt-25`} ref={dropTarget} style={{ border }}>
       {!!Object.keys(bun).length && <li className={`${burgerConstructorStyles.listElement} mr-4`}>
         <ConstructorElement
           type="top"

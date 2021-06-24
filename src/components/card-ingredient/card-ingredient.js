@@ -1,4 +1,5 @@
 import { useDispatch } from 'react-redux';
+import { useDrag } from "react-dnd";
 import PropTypes from 'prop-types';
 
 import cardIngrStyles from './card-ingredient.module.css';
@@ -12,6 +13,14 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 
 function CardIngredient(props) {
+  const [{ isDrag }, dragRef] = useDrag({
+    type: "ingredient",
+    item: props.item,
+    collect: monitor => ({
+      isDrag: monitor.isDragging()
+    })
+  });
+
   const dispatch = useDispatch();
 
   const renderIngredient = () => {
@@ -29,12 +38,14 @@ function CardIngredient(props) {
 
   return (
     <div className={`${cardIngrStyles.card} mb-8`} onClick={renderIngredient}>
-      <img className='mb-1' src={props.item.image} alt={props.item.name}></img>
-      <div className={cardIngrStyles.price}>
-        <p className='text text_type_digits-default mr-1'>{props.item.price}</p>
-        <CurrencyIcon />
+      <div className={cardIngrStyles.container} ref={dragRef}>
+        <img className='mb-1' src={props.item.image} alt={props.item.name}></img>
+        <div className={cardIngrStyles.price}>
+          <p className='text text_type_digits-default mr-1'>{props.item.price}</p>
+          <CurrencyIcon />
+        </div>
+        <h3 className='text text_type_main-default mt-1 mb-6'>{props.item.name}</h3>
       </div>
-      <h3 className='text text_type_main-default mt-1 mb-6'>{props.item.name}</h3>
       <Counter count={1} size="default" />
     </div>
   )

@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getIngredients, DELETE_INGREDIENT } from '../../services/actions/actions';
+// dnd
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 // стили для компонента App
 import appStyles from './app.module.css';
 // подключение компонентов
@@ -64,10 +67,10 @@ function App() {
       <AppHeader />
       <section className={appStyles.main}>
         {ingredientsFailed ? <p>Произошла ошибка при получении данных</p> : ingredientsRequest ? <p>Загрузка...</p> :
-          <>
+          <DndProvider backend={HTML5Backend}>
             <BurgerIngredients openModal={openModal(BURGER_INGREDIENT)} />
             <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />
-          </>
+          </DndProvider>
         }
       </section>
 
