@@ -106,8 +106,7 @@ const ingredientReducer = (state = initialState, action) => {
         constructorIngredients: {
           ...state.constructorIngredients,
           stuffing: [...state.constructorIngredients.stuffing.filter((item, index) => index !== action.index)],
-          totalPrice: prevPrice - state.constructorIngredients.stuffing.find((item, index) => index === action.index).price,
-          // stuffing: [...state.constructorIngredients.stuffing.filter((item) => item._id !== action.item._id)]
+          totalPrice: !!state.constructorIngredients.stuffing.length ? prevPrice - state.constructorIngredients.stuffing.find((item, index) => index === action.index).price : 0,
         }
       }
     }
