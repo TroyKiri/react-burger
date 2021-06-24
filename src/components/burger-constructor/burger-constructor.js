@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useDrop } from "react-dnd";
-import { getOrderNumber, ADDITION } from '../../services/actions/actions';
+import { getOrderNumber, ADDITION, DELETE_INGREDIENT_FROM_CONSTRUCTOR } from '../../services/actions/actions';
 
 import PropTypes from 'prop-types';
 
@@ -33,6 +33,13 @@ function BurgerConstructor(props) {
       dispatch(getOrderNumber(ingredientsId, props.openModal))
   }
 
+  function deleteIngredient(index) {
+    dispatch({
+      type: DELETE_INGREDIENT_FROM_CONSTRUCTOR,
+      index: index
+    })
+  }
+
   return (
     <section className={`${burgerConstructorStyles.container} mr-9 pt-25`} ref={dropTarget} style={{ border }}>
       {!!Object.keys(bun).length && <li className={`${burgerConstructorStyles.listElement} mr-4`}>
@@ -58,6 +65,7 @@ function BurgerConstructor(props) {
                   price={item.price}
                   thumbnail={item.image}
                   key={item._id}
+                  handleClose={() => deleteIngredient(index)}
                 />
               </li>)
           })}

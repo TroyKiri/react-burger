@@ -57,7 +57,7 @@ function CardIngredient(props) {
         <h3 className='text text_type_main-default mt-1 mb-6'>{props.item.name}</h3>
       </div>
       {props.item.type === 'bun' && props.item.name === nameBun && countBun && <Counter count={countBun} size="default" />}
-      {countStuff && <Counter count={countStuff} size="default" />}
+      {!!countStuff && <Counter count={countStuff} size="default" />}
     </div>
   )
 }

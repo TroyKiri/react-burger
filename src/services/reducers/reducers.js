@@ -5,6 +5,7 @@ import {
 
   RESET,
   ADDITION,
+  DELETE_INGREDIENT_FROM_CONSTRUCTOR,
 
   CHOOSE_INGREDIENT,
   DELETE_INGREDIENT,
@@ -85,20 +86,7 @@ const ingredientReducer = (state = initialState, action) => {
               {
                 ...action.item,
                 count: countStuff
-                // count: state.constructorIngredients.stuffing.find((item) => item._id === action.item._id) ?
-                //   state.constructorIngredients.stuffing.reduce((prev, item) => item._id === action.item._id ? prev = prev + 1 : prev, 1) :
-                //   countStuff
-                // state.constructorIngredients.stuffing.reduce((prev, item) => {
-                //   if (item._id === action.item._id) {
-                //     console.log(prev)
-                //     return prev++
-                //   }
-                // }, 0) : countStuff
               }
-              // {
-
-              //   count: countStuff
-              // }
             ],
             totalPrice: prevPrice + action.item.price,
             ingredientsId: [...state.constructorIngredients.ingredientsId, action.item._id]
@@ -110,6 +98,17 @@ const ingredientReducer = (state = initialState, action) => {
       return {
         ...state,
         constructorIngredients: initialState.constructorIngredients
+      }
+    }
+    case DELETE_INGREDIENT_FROM_CONSTRUCTOR: {
+      return {
+        ...state,
+        constructorIngredients: {
+          ...state.constructorIngredients,
+          stuffing: [...state.constructorIngredients.stuffing.filter((item, index) => index !== action.index)],
+          totalPrice: prevPrice - state.constructorIngredients.stuffing.find((item, index) => index === action.index).price,
+          // stuffing: [...state.constructorIngredients.stuffing.filter((item) => item._id !== action.item._id)]
+        }
       }
     }
     case CHOOSE_INGREDIENT: {
