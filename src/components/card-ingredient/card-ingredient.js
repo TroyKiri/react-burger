@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useDrag } from "react-dnd";
 import PropTypes from 'prop-types';
 
@@ -21,6 +21,16 @@ function CardIngredient(props) {
     })
   });
 
+  // количество булок
+  const { countBun, name: nameBun } = useSelector(store => store.ingredientReducer.constructorIngredients.bun);
+  // массив начинок
+  const { stuffing } = useSelector(store => store.ingredientReducer.constructorIngredients);
+
+  // массив одинаковых ингредиентов
+  const stuff = stuffing.length && stuffing.filter((item) => item.name === props.item.name)
+
+  const countStuff = stuff ? stuff.length : 0;
+
   const dispatch = useDispatch();
 
   const renderIngredient = () => {
@@ -30,10 +40,10 @@ function CardIngredient(props) {
       item: props.item
     })
 
-    dispatch({
-      type: ADDITION,
-      item: props.item
-    })
+    // dispatch({
+    //   type: ADDITION,
+    //   item: props.item
+    // })
   }
 
   return (
@@ -46,7 +56,8 @@ function CardIngredient(props) {
         </div>
         <h3 className='text text_type_main-default mt-1 mb-6'>{props.item.name}</h3>
       </div>
-      <Counter count={1} size="default" />
+      {props.item.type === 'bun' && props.item.name === nameBun && countBun && <Counter count={countBun} size="default" />}
+      {countStuff && <Counter count={countStuff} size="default" />}
     </div>
   )
 }

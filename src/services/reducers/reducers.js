@@ -66,17 +66,40 @@ const ingredientReducer = (state = initialState, action) => {
           ...state,
           constructorIngredients: {
             ...state.constructorIngredients,
-            bun: action.item,
+            bun: {
+              ...action.item,
+              countBun: 2
+            },
             totalPrice: bunPrice ? prevPrice - bunPrice + 2 * action.item.price : prevPrice + 2 * action.item.price,
             ingredientsId: [...state.constructorIngredients.ingredientsId, action.item._id, action.item._id]
           }
         }
       } else {
+        const countStuff = 1;
         return {
           ...state,
           constructorIngredients: {
             ...state.constructorIngredients,
-            stuffing: [...state.constructorIngredients.stuffing, action.item],
+            stuffing: [
+              ...state.constructorIngredients.stuffing,
+              {
+                ...action.item,
+                count: countStuff
+                // count: state.constructorIngredients.stuffing.find((item) => item._id === action.item._id) ?
+                //   state.constructorIngredients.stuffing.reduce((prev, item) => item._id === action.item._id ? prev = prev + 1 : prev, 1) :
+                //   countStuff
+                // state.constructorIngredients.stuffing.reduce((prev, item) => {
+                //   if (item._id === action.item._id) {
+                //     console.log(prev)
+                //     return prev++
+                //   }
+                // }, 0) : countStuff
+              }
+              // {
+
+              //   count: countStuff
+              // }
+            ],
             totalPrice: prevPrice + action.item.price,
             ingredientsId: [...state.constructorIngredients.ingredientsId, action.item._id]
           }
