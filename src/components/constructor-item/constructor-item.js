@@ -63,6 +63,8 @@ const ConstructorItem = (props) => {
         hoverIndex: hoverIndex,
       });
 
+      // rebaseItems(dragIndex, hoverIndex)
+
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,
       // but it's good here for the sake of performance
@@ -90,6 +92,7 @@ const ConstructorItem = (props) => {
   const opacity = isDragging ? 0 : 1;
   return (
     <li
+      draggable
       key={props.index}
       className={`${constructorItemStyles.listElement} mr-2`}
       ref={ref}

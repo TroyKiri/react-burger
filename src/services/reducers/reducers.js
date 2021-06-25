@@ -165,22 +165,40 @@ const ingredientReducer = (state = initialState, action) => {
       };
     }
     case SWAP: {
-      const arr = [...state.constructorIngredients.stuffing];
       const dragIndex = action.dragIndex;
       const hoverIndex = action.hoverIndex;
+      const dragItem = state.constructorIngredients.stuffing[dragIndex];
+      if (dragItem) {
+        const arr = [...state.constructorIngredients.stuffing];
 
-      const dragElement = arr[dragIndex];
-      const hoverElement = arr[hoverIndex];
+        const hoverItem = arr.splice(hoverIndex, 1, dragItem);
+        arr.splice(dragIndex, 1, hoverItem[0])
+        return {
+          ...state,
+          constructorIngredients: {
+            ...state.constructorIngredients,
+            stuffing: arr,
+          },
+        };
+      } else {
+        return state
+      }
 
-      arr[hoverIndex] = dragElement;
-      arr[dragIndex] = hoverElement;
-      return {
-        ...state,
-        constructorIngredients: {
-          ...state.constructorIngredients,
-          stuffing: arr,
-        },
-      };
+
+      // const hoverIndex = action.hoverIndex;
+
+      // const dragElement = arr[dragIndex];
+      // const hoverElement = arr[hoverIndex];
+
+      // arr[hoverIndex] = dragElement;
+      // arr[dragIndex] = hoverElement;
+      // return {
+      //   ...state,
+      //   constructorIngredients: {
+      //     ...state.constructorIngredients,
+      //     stuffing: arr,
+      //   },
+      // };
     }
     default: {
       return state;

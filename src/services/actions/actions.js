@@ -76,3 +76,15 @@ export function getOrderNumber(ingredientsId, openModal) {
       });
   };
 }
+
+// export const rebaseItems = (dragIndex, hoverIndex) => {
+//   return function (dispatch) {
+//     if () {
+//       dispatch({
+//         type: SWAP,
+//         dragIndex: dragIndex,
+//         hoverIndex: hoverIndex,
+//       })
+//     }
+//   }
+// }
