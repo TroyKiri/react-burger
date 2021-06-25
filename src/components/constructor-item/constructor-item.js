@@ -54,17 +54,15 @@ const ConstructorItem = (props) => {
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
         return;
       }
-      console.log(`dragIndex - ${item[dragIndex]}`);
-      console.log(`hoverIndex - ${item[hoverIndex]}`);
       // Time to actually perform the action
       // moveCard(dragIndex, hoverIndex);
+
       dispatch({
         type: SWAP,
         dragIndex: dragIndex,
         hoverIndex: hoverIndex,
-        dragElement: item[dragIndex],
-        hoverElement: item[hoverIndex],
       });
+
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,
       // but it's good here for the sake of performance
@@ -79,10 +77,10 @@ const ConstructorItem = (props) => {
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-    // index: props.index,
   });
 
   drag(drop(ref));
+
   function deleteIngredient(index) {
     dispatch({
       type: DELETE_INGREDIENT_FROM_CONSTRUCTOR,

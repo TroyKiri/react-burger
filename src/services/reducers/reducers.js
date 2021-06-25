@@ -113,7 +113,7 @@ const ingredientReducer = (state = initialState, action) => {
       };
     }
     case DELETE_INGREDIENT_FROM_CONSTRUCTOR: {
-      return {
+      return !!action.index ? {
         ...state,
         constructorIngredients: {
           ...state.constructorIngredients,
@@ -124,12 +124,12 @@ const ingredientReducer = (state = initialState, action) => {
           ],
           totalPrice: !!state.constructorIngredients.stuffing.length
             ? prevPrice -
-              state.constructorIngredients.stuffing.find(
-                (item, index) => index === action.index
-              ).price
+            state.constructorIngredients.stuffing.find(
+              (item, index) => index === action.index
+            ).price
             : 0,
         },
-      };
+      } : state;
     }
     case CHOOSE_INGREDIENT: {
       return {
@@ -140,7 +140,7 @@ const ingredientReducer = (state = initialState, action) => {
     case DELETE_INGREDIENT: {
       return {
         ...state,
-        currentIngredient: initialState.currentIngredient,
+        currentIngredient: {},
       };
     }
     case GET_ORDER_NUMBER_REQUEST: {
@@ -174,17 +174,11 @@ const ingredientReducer = (state = initialState, action) => {
 
       arr[hoverIndex] = dragElement;
       arr[dragIndex] = hoverElement;
-
       return {
         ...state,
         constructorIngredients: {
           ...state.constructorIngredients,
           stuffing: arr,
-          // stuffing: [
-          //   ...arr,
-          //   (arr[hoverIndex] = dragElement),
-          //   (arr[dragIndex] = hoverElement),
-          // ],
         },
       };
     }

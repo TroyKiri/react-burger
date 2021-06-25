@@ -38,7 +38,7 @@ function BurgerConstructor(props) {
   const { stuffing, bun, totalPrice, ingredientsId } = useSelector(
     (store) => store.ingredientReducer.constructorIngredients
   );
-  console.log(stuffing);
+
   const dispatch = useDispatch();
 
   function makeOrder() {
