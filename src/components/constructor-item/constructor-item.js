@@ -1,5 +1,5 @@
-import { useCallback, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useRef } from "react";
+import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 
 import constructorItemStyles from "./constructor-item.module.css";
@@ -15,27 +15,11 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 const ConstructorItem = (props) => {
-  // const { stuffing } = useSelector(
-  //   (store) => store.ingredientReducer.constructorIngredients
-  // );
-
-  // const moveCard = useCallback(
-  //   (dragIndex, hoverIndex) => {
-  //     // const dragCart = stuffing[dragIndex];
-  //     // console.log(`dragCart - ${dragCart}`);
-  //     dispatch({
-  //       type: SWAP,
-  //       dragIndex,
-  //       hoverIndex,
-  //     });
-  //   },
-  //   [stuffing]
-  // );
-
   const dispatch = useDispatch();
 
   const ref = useRef(null);
-  const [{ handlerId, isHovered }, drop] = useDrop({
+
+  const [{ handlerId, isHovered }, dropRef] = useDrop({
     accept: "swap-ingredient",
     collect: (monitor) => {
       return {
@@ -73,7 +57,7 @@ const ConstructorItem = (props) => {
     },
   });
 
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, dragRef] = useDrag({
     type: "swap-ingredient",
     item: { id: props.item._id, index: props.index },
     collect: (monitor) => ({
@@ -81,7 +65,7 @@ const ConstructorItem = (props) => {
     }),
   });
 
-  drag(drop(ref));
+  dragRef(dropRef(ref));
 
   function deleteIngredient(index) {
     dispatch({
@@ -90,11 +74,13 @@ const ConstructorItem = (props) => {
     });
   }
 
+  // console.log(`isDragging - ${isDragging}`);
+  // console.log(`isDragging - ${isHovered}`);
+
   const opacity = isDragging ? 0 : 1;
 
   return (
     <li
-      key={props.index}
       className={`${constructorItemStyles.listElement} mr-2`}
       ref={ref}
       style={{ opacity }}

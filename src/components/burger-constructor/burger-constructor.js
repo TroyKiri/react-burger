@@ -3,11 +3,6 @@ import { useDrop } from "react-dnd";
 
 import { ADD_INGREDIENT_TO_CONSTRUCTOR } from "../../services/actions/constructorAction";
 import { getOrderNumber } from "../../services/actions/orderAction";
-// import {
-//   getOrderNumber,
-//   ADDITION,
-//   DELETE_INGREDIENT_FROM_CONSTRUCTOR,
-// } from "../../services/actions/actions";
 
 import PropTypes from "prop-types";
 
@@ -37,10 +32,6 @@ function BurgerConstructor(props) {
 
   const border = isHover && "2px solid #4C4CFF";
 
-  // const { stuffing, bun, totalPrice, ingredientsId } = useSelector(
-  //   (store) => store.ingredientReducer.constructorIngredients
-  // );
-  // console.log(stuffing);
   const dispatch = useDispatch();
 
   const { bun, stuffing } = useSelector(
@@ -54,7 +45,9 @@ function BurgerConstructor(props) {
   const priceOfStuffing = stuffing.reduce((prev, item) => {
     return (prev = prev + item.price);
   }, 0);
-  const totalPrice = 2 * bun.price + priceOfStuffing;
+  const totalPrice = bun.price
+    ? 2 * bun.price + priceOfStuffing
+    : priceOfStuffing;
 
   function makeOrder() {
     // проверяем наличие булочки и хотя бы одной начинки
@@ -62,13 +55,6 @@ function BurgerConstructor(props) {
       !!Object.keys(bun).length &&
       dispatch(getOrderNumber(arrayOfIngredientsId, props.openModal));
   }
-
-  // function deleteIngredient(index) {
-  //   dispatch({
-  //     type: DELETE_INGREDIENT_FROM_CONSTRUCTOR,
-  //     index: index,
-  //   });
-  // }
 
   return (
     <section

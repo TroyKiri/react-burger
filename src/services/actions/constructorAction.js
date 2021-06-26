@@ -7,10 +7,8 @@ export const RESET_CONSTRUCTOR = "RESET_CONSTRUCTOR";
 //dnd
 export const MOVE_CONSTRUCTOR_ITEM = "MOVE_CONSTRUCTOR_ITEM";
 
-export const moveConstructorItem = (dragIndex, hoverIndex) => (dispatch) => {
-  dispatch({
-    type: MOVE_CONSTRUCTOR_ITEM,
-    dragIndex,
-    hoverIndex,
-  });
-};
+export const moveConstructorItem = (dragIndex, hoverIndex) => ({
+  type: MOVE_CONSTRUCTOR_ITEM,
+  dragIndex,
+  hoverIndex,
+});

@@ -40,6 +40,7 @@ const constructorReducer = (state = initialConstructorState, action) => {
         ...initialConstructorState,
       };
     }
+
     case MOVE_CONSTRUCTOR_ITEM: {
       const dragIndex = action.dragIndex;
       const hoverIndex = action.hoverIndex;
