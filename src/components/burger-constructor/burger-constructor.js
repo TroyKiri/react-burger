@@ -1,10 +1,17 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useDrop } from "react-dnd";
+
 import {
-  getOrderNumber,
-  ADDITION,
+  ADD_INGREDIENT_TO_CONSTRUCTOR,
   DELETE_INGREDIENT_FROM_CONSTRUCTOR,
-} from "../../services/actions/actions";
+  RESET_CONSTRUCTOR,
+} from "../../services/actions/constructorAction";
+
+// import {
+//   getOrderNumber,
+//   ADDITION,
+//   DELETE_INGREDIENT_FROM_CONSTRUCTOR,
+// } from "../../services/actions/actions";
 
 import PropTypes from "prop-types";
 
@@ -14,7 +21,6 @@ import ConstructorItem from "../constructor-item/constructor-item";
 
 import {
   ConstructorElement,
-  DragIcon,
   CurrencyIcon,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -24,7 +30,7 @@ function BurgerConstructor(props) {
     accept: "ingredient",
     drop(ingredient) {
       dispatch({
-        type: ADDITION,
+        type: ADD_INGREDIENT_TO_CONSTRUCTOR,
         item: ingredient,
       });
     },
@@ -35,25 +41,35 @@ function BurgerConstructor(props) {
 
   const border = isHover && "2px solid #4C4CFF";
 
-  const { stuffing, bun, totalPrice, ingredientsId } = useSelector(
-    (store) => store.ingredientReducer.constructorIngredients
-  );
-
+  // const { stuffing, bun, totalPrice, ingredientsId } = useSelector(
+  //   (store) => store.ingredientReducer.constructorIngredients
+  // );
+  // console.log(stuffing);
   const dispatch = useDispatch();
 
-  function makeOrder() {
-    // проверяем наличие булочки и хотя бы одной начинки
-    !!stuffing.length &&
-      !!Object.keys(bun).length &&
-      dispatch(getOrderNumber(ingredientsId, props.openModal));
-  }
+  const { bun, stuffing } = useSelector(
+    (store) => store.constructorIngredients
+  );
 
-  function deleteIngredient(index) {
-    dispatch({
-      type: DELETE_INGREDIENT_FROM_CONSTRUCTOR,
-      index: index,
-    });
-  }
+  // Итоговая стоимость
+  const priceOfStuffing = stuffing.reduce((prev, item) => {
+    return (prev = prev + item.price);
+  }, 0);
+  const totalPrice = 2 * bun.price + priceOfStuffing;
+
+  // function makeOrder() {
+  //   // проверяем наличие булочки и хотя бы одной начинки
+  //   !!stuffing.length &&
+  //     !!Object.keys(bun).length &&
+  //     dispatch(getOrderNumber(ingredientsId, props.openModal));
+  // }
+
+  // function deleteIngredient(index) {
+  //   dispatch({
+  //     type: DELETE_INGREDIENT_FROM_CONSTRUCTOR,
+  //     index: index,
+  //   });
+  // }
 
   return (
     <section
@@ -103,10 +119,12 @@ function BurgerConstructor(props) {
       )}
       <div className={`${burgerConstructorStyles.orderContainer} mt-10 mr-4`}>
         <div className={`${burgerConstructorStyles.priceContainer} mr-10`}>
-          <p className="text text_type_digits-medium mr-2">{totalPrice}</p>
+          <p className="text text_type_digits-medium mr-2">
+            {totalPrice ? totalPrice : 0}
+          </p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium" onClick={makeOrder}>
+        <Button type="primary" size="medium">
           Оформить заказ
         </Button>
       </div>

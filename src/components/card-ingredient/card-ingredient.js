@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import cardIngrStyles from "./card-ingredient.module.css";
 
-import { ADDITION, CHOOSE_INGREDIENT } from "../../services/actions/actions";
+import { CHOOSE_INGREDIENT } from "../../services/actions/ingredientDetailsAction";
 
 //проверка объекта с определенной структурой
 import dataPropTypes from "../../utils/prop-types";
@@ -13,27 +13,34 @@ import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components
 import { Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 
 function CardIngredient(props) {
-  const [{ isDrag }, dragRef] = useDrag({
+  const [, dragRef] = useDrag({
     type: "ingredient",
-    item: { ...props.item, index: 0 },
-    collect: (monitor) => ({
-      isDrag: monitor.isDragging(),
-    }),
+    item: { ...props.item },
   });
 
   // количество булок
-  const { countBun, name: nameBun } = useSelector(
-    (store) => store.ingredientReducer.constructorIngredients.bun
-  );
+  // const { countBun, name: nameBun } = useSelector(
+  //   (store) => store.ingredientReducer.constructorIngredients.bun
+  // );
   // массив начинок
-  const { stuffing } = useSelector(
-    (store) => store.ingredientReducer.constructorIngredients
+  // const { stuffing } = useSelector(
+  //   (store) => store.ingredientReducer.constructorIngredients
+  // );
+
+  // массив одинаковых ингредиентов
+  // const stuff =
+  //   stuffing.length && stuffing.filter((item) => item.name === props.item.name);
+
+  // const countStuff = stuff ? stuff.length : 0;
+
+  const { _id: bunId } = useSelector(
+    (store) => store.constructorIngredients.bun
   );
+  const { stuffing } = useSelector((store) => store.constructorIngredients);
 
   // массив одинаковых ингредиентов
   const stuff =
     stuffing.length && stuffing.filter((item) => item.name === props.item.name);
-
   const countStuff = stuff ? stuff.length : 0;
 
   const dispatch = useDispatch();
@@ -44,11 +51,6 @@ function CardIngredient(props) {
       type: CHOOSE_INGREDIENT,
       item: props.item,
     });
-
-    // dispatch({
-    //   type: ADDITION,
-    //   item: props.item
-    // })
   };
 
   return (
@@ -69,8 +71,8 @@ function CardIngredient(props) {
           {props.item.name}
         </h3>
       </div>
-      {props.item.type === "bun" && props.item.name === nameBun && countBun && (
-        <Counter count={countBun} size="default" />
+      {props.item.type === "bun" && props.item._id === bunId && (
+        <Counter count={2} size="default" />
       )}
       {!!countStuff && <Counter count={countStuff} size="default" />}
     </div>

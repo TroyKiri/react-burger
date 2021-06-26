@@ -1,47 +1,52 @@
-import { DATA_ID, ORDER_ID } from "../../utils/constants";
+import { ORDER_ID } from "../../utils/constants";
+
 //экшены для загрузки ингредиентов с API
-export const GET_INGREDIENTS_REQUEST = "GET_INGREDIENTS_REQUEST";
-export const GET_INGREDIENTS_SUCCESS = "GET_INGREDIENTS_SUCCESS";
-export const GET_INGREDIENTS_FAILED = "GET_INGREDIENTS_FAILED";
+// export const GET_INGREDIENTS_REQUEST = "GET_INGREDIENTS_REQUEST";
+// export const GET_INGREDIENTS_SUCCESS = "GET_INGREDIENTS_SUCCESS";
+// export const GET_INGREDIENTS_FAILED = "GET_INGREDIENTS_FAILED";
+
 // экшены для добавления ингредиентов в конструктор
-export const ADDITION = "ADDITION";
-export const RESET = "RESET";
-export const DELETE_INGREDIENT_FROM_CONSTRUCTOR = "DELETE_INGREDIENT";
+// export const ADDITION = "ADDITION";
+// export const RESET = "RESET";
+// export const DELETE_INGREDIENT_FROM_CONSTRUCTOR = "DELETE_INGREDIENT";
+
 // экшены для просмотра информации об ингредиенте
-export const CHOOSE_INGREDIENT = "CHOOSE_INGREDIENT";
-export const DELETE_INGREDIENT = "DELETE_INGREDIENT";
+// export const CHOOSE_INGREDIENT = "CHOOSE_INGREDIENT";
+// export const DELETE_INGREDIENT = "DELETE_INGREDIENT";
+
 // экшены для получения номера заказа
 export const GET_ORDER_NUMBER_REQUEST = "GET_ORDER_NUMBER_REQUEST";
 export const GET_ORDER_NUMBER_SUCCESS = "GET_ORDER_NUMBER_SUCCESS";
 export const GET_ORDER_NUMBER_FAILED = "GET_ORDER_NUMBER_FAILED";
 //dnd
 export const SWAP = "SWAP";
+export const MOVE_CONSTRUCTOR_ITEM = "MOVE_CONSTRUCTOR_ITEM";
 
-export function getIngredients() {
-  return function (dispatch) {
-    dispatch({
-      type: GET_INGREDIENTS_REQUEST,
-    });
+// export function getIngredients() {
+//   return function (dispatch) {
+//     dispatch({
+//       type: GET_INGREDIENTS_REQUEST,
+//     });
 
-    fetch(DATA_ID)
-      .then((res) => {
-        return res.ok ? res : Promise.reject(res.status);
-      })
-      .then((res) => res.json())
-      .then((res) => {
-        dispatch({
-          type: GET_INGREDIENTS_SUCCESS,
-          ingredients: res.data,
-        });
-      })
-      .catch((e) => {
-        console.log(`Ошибка: статус промиса: ${e}`);
-        dispatch({
-          type: GET_INGREDIENTS_FAILED,
-        });
-      });
-  };
-}
+//     fetch(DATA_ID)
+//       .then((res) => {
+//         return res.ok ? res : Promise.reject(res.status);
+//       })
+//       .then((res) => res.json())
+//       .then((res) => {
+//         dispatch({
+//           type: GET_INGREDIENTS_SUCCESS,
+//           ingredients: res.data,
+//         });
+//       })
+//       .catch((e) => {
+//         console.log(`Ошибка: статус промиса: ${e}`);
+//         dispatch({
+//           type: GET_INGREDIENTS_FAILED,
+//         });
+//       });
+//   };
+// }
 
 export function getOrderNumber(ingredientsId, openModal) {
   return function (dispatch) {
@@ -65,7 +70,7 @@ export function getOrderNumber(ingredientsId, openModal) {
           type: GET_ORDER_NUMBER_SUCCESS,
           number: res.order.number,
         });
-        dispatch({ type: RESET });
+        // dispatch({ type: RESET });
         openModal();
       })
       .catch((e) => {
@@ -76,7 +81,13 @@ export function getOrderNumber(ingredientsId, openModal) {
       });
   };
 }
-
+export const moveConstructorItem = (dragIndex, hoverIndex) => (dispatch) => {
+  dispatch({
+    type: MOVE_CONSTRUCTOR_ITEM,
+    dragIndex,
+    hoverIndex,
+  });
+};
 // export const rebaseItems = (dragIndex, hoverIndex) => {
 //   return function (dispatch) {
 //     if () {
