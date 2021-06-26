@@ -2,6 +2,7 @@ import {
   ADD_INGREDIENT_TO_CONSTRUCTOR,
   DELETE_INGREDIENT_FROM_CONSTRUCTOR,
   RESET_CONSTRUCTOR,
+  MOVE_CONSTRUCTOR_ITEM,
 } from "../actions/constructorAction";
 
 const initialConstructorState = {
@@ -37,6 +38,22 @@ const constructorReducer = (state = initialConstructorState, action) => {
     case RESET_CONSTRUCTOR: {
       return {
         ...initialConstructorState,
+      };
+    }
+    case MOVE_CONSTRUCTOR_ITEM: {
+      const dragIndex = action.dragIndex;
+      const hoverIndex = action.hoverIndex;
+      const arr = [...state.stuffing];
+
+      const dragElement = arr[dragIndex];
+      const hoverElement = arr[hoverIndex];
+
+      arr[hoverIndex] = dragElement;
+      arr[dragIndex] = hoverElement;
+
+      return {
+        ...state,
+        stuffing: arr,
       };
     }
 

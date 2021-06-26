@@ -1,12 +1,8 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useDrop } from "react-dnd";
 
-import {
-  ADD_INGREDIENT_TO_CONSTRUCTOR,
-  DELETE_INGREDIENT_FROM_CONSTRUCTOR,
-  RESET_CONSTRUCTOR,
-} from "../../services/actions/constructorAction";
-
+import { ADD_INGREDIENT_TO_CONSTRUCTOR } from "../../services/actions/constructorAction";
+import { getOrderNumber } from "../../services/actions/orderAction";
 // import {
 //   getOrderNumber,
 //   ADDITION,
@@ -51,18 +47,21 @@ function BurgerConstructor(props) {
     (store) => store.constructorIngredients
   );
 
+  const arrayOfStuffingId = stuffing.map((item) => item._id);
+  const arrayOfIngredientsId = [...arrayOfStuffingId, bun._id];
+
   // Итоговая стоимость
   const priceOfStuffing = stuffing.reduce((prev, item) => {
     return (prev = prev + item.price);
   }, 0);
   const totalPrice = 2 * bun.price + priceOfStuffing;
 
-  // function makeOrder() {
-  //   // проверяем наличие булочки и хотя бы одной начинки
-  //   !!stuffing.length &&
-  //     !!Object.keys(bun).length &&
-  //     dispatch(getOrderNumber(ingredientsId, props.openModal));
-  // }
+  function makeOrder() {
+    // проверяем наличие булочки и хотя бы одной начинки
+    !!stuffing.length &&
+      !!Object.keys(bun).length &&
+      dispatch(getOrderNumber(arrayOfIngredientsId, props.openModal));
+  }
 
   // function deleteIngredient(index) {
   //   dispatch({
@@ -124,7 +123,7 @@ function BurgerConstructor(props) {
           </p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium">
+        <Button type="primary" size="medium" onClick={makeOrder}>
           Оформить заказ
         </Button>
       </div>

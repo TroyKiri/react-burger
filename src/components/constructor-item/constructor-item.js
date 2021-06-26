@@ -4,9 +4,11 @@ import { useDrag, useDrop } from "react-dnd";
 
 import constructorItemStyles from "./constructor-item.module.css";
 
-import { DELETE_INGREDIENT_FROM_CONSTRUCTOR } from "../../services/actions/constructorAction";
+import {
+  DELETE_INGREDIENT_FROM_CONSTRUCTOR,
+  moveConstructorItem,
+} from "../../services/actions/constructorAction";
 
-import { SWAP, moveConstructorItem } from "../../services/actions/actions";
 import {
   ConstructorElement,
   DragIcon,
