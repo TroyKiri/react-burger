@@ -12,7 +12,7 @@ export function getOrderNumber(ingredientsId, openModal) {
       type: GET_ORDER_NUMBER_REQUEST,
     });
 
-    fetch(ORDER_ID, {
+    return fetch(ORDER_ID, {
       method: "POST",
       body: JSON.stringify({ ingredients: ingredientsId }),
       headers: {

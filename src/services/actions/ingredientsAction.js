@@ -11,7 +11,7 @@ export function getIngredients() {
       type: GET_INGREDIENTS_REQUEST,
     });
 
-    fetch(DATA_ID)
+    return fetch(DATA_ID)
       .then((res) => {
         return res.ok ? res : Promise.reject(res.status);
       })
