@@ -81,7 +81,7 @@ function BurgerConstructor(props) {
               stuffing.map((item, index) => {
                 return (
                   item.type !== "bun" && (
-                    <ConstructorItem key={index} item={item} index={index} />
+                    <ConstructorItem key={item.key} item={item} index={index} />
                   )
                 );
               })}

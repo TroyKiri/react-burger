@@ -2,6 +2,9 @@ import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 
+//проверка объекта с определенной структурой
+import dataPropTypes from "../../utils/prop-types";
+
 import constructorItemStyles from "./constructor-item.module.css";
 
 import {
@@ -19,12 +22,11 @@ const ConstructorItem = (props) => {
 
   const ref = useRef(null);
 
-  const [{ handlerId, isHovered }, dropRef] = useDrop({
+  const [{ handlerId }, dropRef] = useDrop({
     accept: "swap-ingredient",
     collect: (monitor) => {
       return {
         handlerId: monitor.getHandlerId(),
-        isHovered: monitor.isOver(),
       };
     },
     hover(item, monitor) {
@@ -51,7 +53,7 @@ const ConstructorItem = (props) => {
         return;
       }
 
-      dispatch(moveConstructorItem(dragIndex, hoverIndex));
+      dispatch(moveConstructorItem({ dragIndex, hoverIndex }));
 
       item.index = hoverIndex;
     },
@@ -74,9 +76,6 @@ const ConstructorItem = (props) => {
     });
   }
 
-  // console.log(`isDragging - ${isDragging}`);
-  // console.log(`isDragging - ${isHovered}`);
-
   const opacity = isDragging ? 0 : 1;
 
   return (
@@ -98,6 +97,10 @@ const ConstructorItem = (props) => {
       />
     </li>
   );
+};
+
+ConstructorItem.propTypes = {
+  item: dataPropTypes.isRequired,
 };
 
 export default ConstructorItem;

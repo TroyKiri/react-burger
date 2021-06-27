@@ -18,21 +18,6 @@ function CardIngredient(props) {
     item: { ...props.item },
   });
 
-  // количество булок
-  // const { countBun, name: nameBun } = useSelector(
-  //   (store) => store.ingredientReducer.constructorIngredients.bun
-  // );
-  // массив начинок
-  // const { stuffing } = useSelector(
-  //   (store) => store.ingredientReducer.constructorIngredients
-  // );
-
-  // массив одинаковых ингредиентов
-  // const stuff =
-  //   stuffing.length && stuffing.filter((item) => item.name === props.item.name);
-
-  // const countStuff = stuff ? stuff.length : 0;
-
   const { _id: bunId } = useSelector(
     (store) => store.constructorIngredients.bun
   );

@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import {
   ADD_INGREDIENT_TO_CONSTRUCTOR,
   DELETE_INGREDIENT_FROM_CONSTRUCTOR,
@@ -21,7 +23,7 @@ const constructorReducer = (state = initialConstructorState, action) => {
       } else {
         return {
           ...state,
-          stuffing: [...state.stuffing, action.item],
+          stuffing: [...state.stuffing, { ...action.item, key: uuidv4() }],
         };
       }
     }
