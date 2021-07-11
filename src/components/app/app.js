@@ -1,154 +1,100 @@
-import { useState, useEffect, useReducer } from 'react';
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
-import appStyles from './app.module.css';
+import { getIngredients } from "../../services/actions/ingredientsAction";
 
-import DATA_ID from '../../utils/constants';
+import { DELETE_INGREDIENT } from "../../services/actions/ingredientDetailsAction";
+// dnd
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+// стили для компонента App
+import appStyles from "./app.module.css";
+// подключение компонентов
+import AppHeader from "../app-header/app-header.js";
+import BurgerIngredients from "../burger-ingredients/burger-ingredients.js";
+import BurgerConstructor from "../burger-constructor/burger-constructor.js";
 
-import AppHeader from '../app-header/app-header.js';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients.js';
-import BurgerConstructor from '../burger-constructor/burger-constructor.js';
+import Modal from "../modal/modal";
+import OrderDetails from "../order-details/order-details";
+import IngredientDetails from "../ingredient-details/ingredient-details";
 
-import Modal from '../modal/modal';
-import OrderDetails from '../order-details/order-details';
-import IngredientDetails from '../ingredient-details/ingredient-details';
-
-import { IngredientContext, ChoosenIngredientContext, OrderNumberContext } from '../../services/ingredientContext';
-
-import { ADDITION, RESET } from '../../utils/actionTypes';
-
-const BURGER_CONSTRUCTOR = 'burger-constructor';
-const BURGER_INGREDIENT = 'burger-ingredient';
-
-const initialState = {stuffing:[], bun:{}, totalPrice: 0, ingredients: []};
-
-function reducerIngredients(state, action) {
-  const bunPrice = 2*state.bun.price; // стоимость булочек
-  const stuffingPrice = state.stuffing.reduce((prev, item) => {return prev+=item.price}, 0); // общая стоимость начинок
-  const prevPrice = bunPrice ? stuffingPrice + bunPrice : stuffingPrice; // стоимость заказа до добавления очередного ингредиента
-
-  if (action.type === ADDITION) {
-    switch (action.item.type) {
-      case 'bun':
-        // возвращаем стейт с новой булочкой и общей ценой
-        return {
-          ...state,
-          bun: action.item,
-          totalPrice: bunPrice ? prevPrice - bunPrice + 2*action.item.price : prevPrice + 2*action.item.price,
-          ingredients: [...state.ingredients, action.item._id, action.item._id]
-        }
-      default:
-        // возвращаем стейт с новыми добавленными ингредиентами и общей цена
-        return {
-          ...state,
-          stuffing: [...state.stuffing, action.item],
-          totalPrice: prevPrice+action.item.price,
-          ingredients: [...state.ingredients, action.item._id]
-          }
-    }
-  } else if (action.type === RESET) {
-    return initialState
-  }
-  return state;
-}
+import { BURGER_CONSTRUCTOR, BURGER_INGREDIENT } from "../../utils/constants";
 
 function App() {
-  // выбранные ингредиенты
-  const choosenIngredientsState = useReducer(reducerIngredients, initialState, undefined);
-  
-  // для открытия модалки с нужным ингредиентом
-  const [ingredient, setIngredient] = useState({})
+  const { ingredientsRequest, ingredientsFailed } = useSelector(
+    (store) => store.ingredients
+  );
+  const dispatch = useDispatch();
+
   // открытие и закрытие модальных окон
   const [visible, setVisible] = useState({
     visibleOrder: false,
-    visibleIngredient: false
-  })
-  // стейт загруженных ингредиентов
-  const [state, setState] = useState({
-    isLoading: false,
-    hasError: false,
-    res: {}
-  })
-  // номер заказа
-  const orderNumberState = useState();
-
+    visibleIngredient: false,
+  });
   // при монтировании вешаем слушатель нажатия на ESC
-  useEffect(()=>{
-    const escHnalder = (event) => event.key === 'Escape' && closeModal();
-    document.addEventListener('keydown', escHnalder);
+  useEffect(() => {
+    const escHnalder = (event) => event.key === "Escape" && closeModal();
+    document.addEventListener("keydown", escHnalder);
 
-    return () => document.removeEventListener('keydown', escHnalder);
+    return () => document.removeEventListener("keydown", escHnalder);
   }, []);
 
-  // изменения состояния для открытия модального окна с выбранным ингредиентом
-  const chooseIngredient = (item) => {
-    setIngredient(item)
-  }
   // открытие модальных окон
   const openModal = (target) => () => {
     if (target === BURGER_CONSTRUCTOR) {
       setVisible({
         visibleOrder: true,
-        visibleIngredient: false
+        visibleIngredient: false,
       });
     } else if (target === BURGER_INGREDIENT) {
       setVisible({
         visibleOrder: false,
-        visibleIngredient: true
+        visibleIngredient: true,
       });
     }
-  }
+  };
+
   // закрытие модальных окон
   const closeModal = () => {
     setVisible({
       visibleOrder: false,
-      visibleIngredient: false
-    })
-  }
-  // получение данных с сервера
-  function getData() {
-    setState({...state, isLoading:true})
-    fetch(DATA_ID)
-      .then(res => {
-        return res.ok ? res : Promise.reject(res.status)
-      })
-      .then(res => res.json())
-      .then(res => setState({...state, res, isLoading: false}))
-      .catch(e => {
-        console.log(`Ошибка: статус промиса: ${e}`);
-        setState({...state, isLoading: false, hasError: true})
-      })
-  }
-  // используем getData() при монтировании
-  useEffect(() => {
-    getData()
-  }, [])
+      visibleIngredient: false,
+    });
+    dispatch({ type: DELETE_INGREDIENT });
+  };
 
-  const data = state.res.data;
-  const { isLoading, hasError } = state;
+  useEffect(() => {
+    dispatch(getIngredients());
+  }, []);
 
   return (
-    <main className={`${appStyles.page} mb-10`}>
+    <main className={`${appStyles.page}`}>
       <AppHeader />
-      <IngredientContext.Provider value={data}>
-        <OrderNumberContext.Provider value={orderNumberState}>
-          <ChoosenIngredientContext.Provider value={choosenIngredientsState}>
-            <section className={appStyles.main}>
-              {!isLoading && !hasError && data && <BurgerIngredients chooseIngredient={chooseIngredient} openModal={openModal(BURGER_INGREDIENT)} />}
-              {!isLoading && !hasError && data && <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />}
-            </section>
-          </ChoosenIngredientContext.Provider>
+      <section className={appStyles.main}>
+        {ingredientsFailed ? (
+          <p>Произошла ошибка при получении данных</p>
+        ) : ingredientsRequest ? (
+          <p>Загрузка...</p>
+        ) : (
+          <DndProvider backend={HTML5Backend}>
+            <BurgerIngredients openModal={openModal(BURGER_INGREDIENT)} />
+            <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />
+          </DndProvider>
+        )}
+      </section>
 
-          {visible.visibleOrder && <Modal onClose={closeModal}><OrderDetails /></Modal>}
-          {
-            visible.visibleIngredient && 
-            <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
-              <IngredientDetails {...ingredient} />
-            </Modal>
-          }  
-        </OrderNumberContext.Provider>
-      </IngredientContext.Provider>
+      {visible.visibleOrder && (
+        <Modal onClose={closeModal}>
+          <OrderDetails />
+        </Modal>
+      )}
+      {visible.visibleIngredient && (
+        <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
+          <IngredientDetails />
+        </Modal>
+      )}
     </main>
-  )
+  );
 }
 
 export default App;
