@@ -1,0 +1,26 @@
+.main {
+  width: 480px;
+  margin-top: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.header {
+  text-align: center;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+}
+.input {
+  width: 100%;
+}
+
+.button {
+  margin: 0 auto;
+}
+
+.link {
+  text-decoration: none;
+  color: #4c4cff;
+}
