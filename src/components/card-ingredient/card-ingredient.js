@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useDrag } from "react-dnd";
 import PropTypes from "prop-types";
@@ -24,9 +25,12 @@ function CardIngredient(props) {
   const { stuffing } = useSelector((store) => store.constructorIngredients);
 
   // массив одинаковых ингредиентов
-  const stuff =
-    stuffing.length && stuffing.filter((item) => item.name === props.item.name);
-  const countStuff = stuff ? stuff.length : 0;
+  const stuff = useMemo(
+    () =>
+      stuffing.length && stuffing.filter((item) => item._id === props.item._id),
+    [stuffing]
+  );
+  const countStuff = useMemo(() => (stuff ? stuff.length : 0), [stuff]);
 
   const dispatch = useDispatch();
 

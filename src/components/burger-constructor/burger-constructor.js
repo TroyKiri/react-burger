@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useDrop } from "react-dnd";
 
@@ -38,18 +39,22 @@ function BurgerConstructor(props) {
     (store) => store.constructorIngredients
   );
 
-  const arrayOfStuffingId = stuffing.map((item) => item._id);
-  const arrayOfIngredientsId = [...arrayOfStuffingId, bun._id];
-
   // Итоговая стоимость
-  const priceOfStuffing = stuffing.reduce((prev, item) => {
-    return (prev = prev + item.price);
-  }, 0);
-  const totalPrice = bun.price
-    ? 2 * bun.price + priceOfStuffing
-    : priceOfStuffing;
+  const priceOfStuffing = useMemo(
+    () =>
+      stuffing.reduce((prev, item) => {
+        return (prev = prev + item.price);
+      }, 0),
+    [stuffing]
+  );
+  const totalPrice = useMemo(
+    () => (bun.price ? 2 * bun.price + priceOfStuffing : priceOfStuffing),
+    [priceOfStuffing, bun]
+  );
 
   function makeOrder() {
+    const arrayOfStuffingId = stuffing.map((item) => item._id);
+    const arrayOfIngredientsId = [...arrayOfStuffingId, bun._id];
     // проверяем наличие булочки и хотя бы одной начинки
     !!stuffing.length &&
       !!Object.keys(bun).length &&
