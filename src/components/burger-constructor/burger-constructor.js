@@ -2,7 +2,9 @@ import { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useDrop } from "react-dnd";
 
-import { ADD_INGREDIENT_TO_CONSTRUCTOR } from "../../services/actions/constructorAction";
+import {
+  addIngredientToConstructor,
+} from "../../services/actions/constructorAction";
 import { getOrderNumber } from "../../services/actions/orderAction";
 
 import PropTypes from "prop-types";
@@ -21,10 +23,7 @@ function BurgerConstructor(props) {
   const [{ isHover }, dropTarget] = useDrop({
     accept: "ingredient",
     drop(ingredient) {
-      dispatch({
-        type: ADD_INGREDIENT_TO_CONSTRUCTOR,
-        item: ingredient,
-      });
+      dispatch(addIngredientToConstructor({ingredient}));
     },
     collect: (monitor) => ({
       isHover: monitor.isOver(),
