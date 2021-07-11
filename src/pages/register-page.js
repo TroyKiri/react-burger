@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import loginPageStyles from "./login-page.module.css";
+import formStyles from "./form.module.css";
 
 import {
   Input,
@@ -20,16 +20,12 @@ function RegisterPage() {
   };
 
   return (
-    <div className={`${loginPageStyles.main}`}>
-      <h1
-        className={`${loginPageStyles.header} text text_type_main-medium mb-6`}
-      >
+    <div className={`${formStyles.main}`}>
+      <h1 className={`${formStyles.header} text text_type_main-medium mb-6`}>
         Регистрация
       </h1>
-      <form
-        className={`${loginPageStyles.form} text text_type_main-medium mb-20`}
-      >
-        <div className={`${loginPageStyles.input} mb-6`}>
+      <form className={`${formStyles.form} text text_type_main-medium mb-20`}>
+        <div className={`${formStyles.input} mb-6`}>
           <Input
             type={"text"}
             placeholder={"Имя"}
@@ -43,7 +39,7 @@ function RegisterPage() {
             size={"default"}
           />
         </div>
-        <div className={`${loginPageStyles.input} mb-6`}>
+        <div className={`${formStyles.input} mb-6`}>
           <Input
             type={"email"}
             placeholder={"E-mail"}
@@ -57,7 +53,7 @@ function RegisterPage() {
             size={"default"}
           />
         </div>
-        <div className={`${loginPageStyles.input} mb-6`}>
+        <div className={`${formStyles.input} mb-6`}>
           <Input
             type={"password"}
             placeholder={"Пароль"}
@@ -72,28 +68,16 @@ function RegisterPage() {
             size={"default"}
           />
         </div>
-        <div className={`${loginPageStyles.button}`}>
+        <div className={`${formStyles.button}`}>
           <Button type="primary" size="medium">
             Зарегистрироваться
           </Button>
         </div>
       </form>
       <p className="text text_type_main-default mb-4 text_color_inactive">
-        Вы — новый пользователь?&nbsp;
-        <Link
-          to={{ pathname: "/register" }}
-          className={`${loginPageStyles.link}`}
-        >
-          Зарегистрироваться
-        </Link>
-      </p>
-      <p className="text text_type_main-default text_color_inactive">
-        Забыли пароль?&nbsp;
-        <Link
-          to={{ pathname: "/forgot-password" }}
-          className={`${loginPageStyles.link}`}
-        >
-          Восстановить пароль
+        Уже зарегистрированы?&nbsp;
+        <Link to={{ pathname: "/login" }} className={`${formStyles.link}`}>
+          Войти
         </Link>
       </p>
     </div>

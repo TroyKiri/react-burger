@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import loginPageStyles from "./login-page.module.css";
+import formStyles from "./form.module.css";
 
 import {
   Input,
@@ -18,16 +18,12 @@ function LoginPage() {
   };
 
   return (
-    <div className={`${loginPageStyles.main}`}>
-      <h1
-        className={`${loginPageStyles.header} text text_type_main-medium mb-6`}
-      >
+    <div className={`${formStyles.main}`}>
+      <h1 className={`${formStyles.header} text text_type_main-medium mb-6`}>
         Вход
       </h1>
-      <form
-        className={`${loginPageStyles.form} text text_type_main-medium mb-20`}
-      >
-        <div className={`${loginPageStyles.input} mb-6`}>
+      <form className={`${formStyles.form} text text_type_main-medium mb-20`}>
+        <div className={`${formStyles.input} mb-6`}>
           <Input
             type={"email"}
             placeholder={"E-mail"}
@@ -41,7 +37,7 @@ function LoginPage() {
             size={"default"}
           />
         </div>
-        <div className={`${loginPageStyles.input} mb-6`}>
+        <div className={`${formStyles.input} mb-6`}>
           <Input
             type={"password"}
             placeholder={"Пароль"}
@@ -56,7 +52,7 @@ function LoginPage() {
             size={"default"}
           />
         </div>
-        <div className={`${loginPageStyles.button}`}>
+        <div className={`${formStyles.button}`}>
           <Button type="primary" size="medium">
             Войти
           </Button>
@@ -64,10 +60,7 @@ function LoginPage() {
       </form>
       <p className="text text_type_main-default mb-4 text_color_inactive">
         Вы — новый пользователь?&nbsp;
-        <Link
-          to={{ pathname: "/register" }}
-          className={`${loginPageStyles.link}`}
-        >
+        <Link to={{ pathname: "/register" }} className={`${formStyles.link}`}>
           Зарегистрироваться
         </Link>
       </p>
@@ -75,7 +68,7 @@ function LoginPage() {
         Забыли пароль?&nbsp;
         <Link
           to={{ pathname: "/forgot-password" }}
-          className={`${loginPageStyles.link}`}
+          className={`${formStyles.link}`}
         >
           Восстановить пароль
         </Link>
