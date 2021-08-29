@@ -5,6 +5,7 @@ import formStyles from "./form.module.css";
 import {
   Input,
   Button,
+  PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 function RegisterPage() {
@@ -13,10 +14,9 @@ function RegisterPage() {
   const [passwordValue, setPasswordValue] = useState("");
   const inputNameRef = useRef(null);
   const inputEmailRef = useRef(null);
-  const inputPasswordRef = useRef(null);
 
-  const onIconClick = () => {
-    setTimeout(() => inputPasswordRef.current.focus(), 0);
+  const onChange = (e) => {
+    setPasswordValue(e.target.value);
   };
 
   return (
@@ -34,7 +34,6 @@ function RegisterPage() {
             name={"name"}
             error={false}
             ref={inputNameRef}
-            onIconClick={onIconClick}
             errorText={"Ошибка"}
             size={"default"}
           />
@@ -48,24 +47,15 @@ function RegisterPage() {
             name={"e-mail"}
             error={false}
             ref={inputEmailRef}
-            onIconClick={onIconClick}
             errorText={"Ошибка"}
             size={"default"}
           />
         </div>
         <div className={`${formStyles.input} mb-6`}>
-          <Input
-            type={"password"}
-            placeholder={"Пароль"}
-            onChange={(e) => setPasswordValue(e.target.value)}
-            icon={"ShowIcon"}
+          <PasswordInput
+            onChange={onChange}
             value={passwordValue}
             name={"password"}
-            error={false}
-            ref={inputPasswordRef}
-            onIconClick={onIconClick}
-            errorText={"Ошибка"}
-            size={"default"}
           />
         </div>
         <div className={`${formStyles.button}`}>

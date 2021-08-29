@@ -3,16 +3,22 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import appStyles from "./app.module.css";
 // подключение компонентов
 import AppHeader from "../app-header/app-header.js";
-import MainPage from "../../pages/main-page";
-import LoginPage from "../../pages/login-page";
-import RegisterPage from "../../pages/register-page";
-import ForgotPasswordPage from "../../pages/forgot-password-page";
+
+import {
+  LoginPage,
+  RegisterPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  NotFound404,
+  ProfilePage,
+  MainPage,
+} from "../../pages/index";
 
 function App() {
   return (
     <main className={`${appStyles.page}`}>
-      <AppHeader />
       <Router>
+        <AppHeader />
         <Switch>
           <Route path="/forgot-password" exact={true}>
             <ForgotPasswordPage />
@@ -23,8 +29,17 @@ function App() {
           <Route path="/login" exact={true}>
             <LoginPage />
           </Route>
-          <Route path="/">
+          <Route path="/reset-password" exact={true}>
+            <ResetPasswordPage />
+          </Route>
+          <Route path="/profile">
+            <ProfilePage />
+          </Route>
+          <Route path="/" exact={true}>
             <MainPage />
+          </Route>
+          <Route>
+            <NotFound404 />
           </Route>
         </Switch>
       </Router>

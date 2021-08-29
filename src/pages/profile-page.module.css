@@ -1,0 +1,9 @@
+.main {
+  margin-top: 120px;
+  width: 88.888%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.container {
+  min-width: 320px;
+}

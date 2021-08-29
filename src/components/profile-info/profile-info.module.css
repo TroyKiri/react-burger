@@ -1,0 +1,7 @@
+.info {
+  width: 320px;
+  flex-basis: 100%;
+}
+.container {
+  min-width: 320px;
+}
