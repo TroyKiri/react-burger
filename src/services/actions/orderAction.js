@@ -11,7 +11,6 @@ export function getOrderNumber(ingredientsId, openModal) {
     dispatch({
       type: GET_ORDER_NUMBER_REQUEST,
     });
-
     return fetch(ORDER_ID, {
       method: "POST",
       body: JSON.stringify({ ingredients: ingredientsId }),

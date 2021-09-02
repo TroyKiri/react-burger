@@ -1,8 +1,15 @@
 import { NavLink } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logOut } from "../../services/actions/authAction";
 
 import styles from "./profile-navigation.module.css";
 
 function ProfileNavigation() {
+  const dispatch = useDispatch();
+  const logout = () => {
+    dispatch(logOut());
+  };
+
   return (
     <nav className={`mb-20`}>
       <ul className={styles.lists}>
@@ -29,9 +36,10 @@ function ProfileNavigation() {
         <li className={styles.list}>
           <NavLink
             exact={true}
-            to={{ pathname: "/profile/exit" }}
+            to={{ pathname: "/login" }}
             className={`text text_type_main-medium ${styles.link}`}
             activeClassName={`${styles.text_active}`}
+            onClick={logout}
           >
             Выход
           </NavLink>

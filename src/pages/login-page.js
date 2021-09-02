@@ -1,6 +1,9 @@
 import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, Redirect } from "react-router-dom";
 import formStyles from "./form.module.css";
+
+import { signIn } from "../services/actions/authAction";
 
 import {
   Input,
@@ -14,12 +17,27 @@ function LoginPage() {
   const inputEmailRef = useRef(null);
   const inputPasswordRef = useRef(null);
 
+  const dispatch = useDispatch();
+  const user = useSelector((store) => store.auth);
+  // console.log(user);
+  console.log(document.cookie);
   const onIconClick = () => {
     setTimeout(() => inputPasswordRef.current.focus(), 0);
   };
   const onChange = (e) => {
     setPasswordValue(e.target.value);
   };
+
+  const login = (e) => {
+    e.preventDefault();
+    dispatch(signIn(emailValue, passwordValue));
+    setEmailValue("");
+    setPasswordValue("");
+  };
+
+  if (user.email && user.name) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <div className={`${formStyles.main}`}>
@@ -49,7 +67,7 @@ function LoginPage() {
           />
         </div>
         <div className={`${formStyles.button}`}>
-          <Button type="primary" size="medium">
+          <Button type="primary" size="medium" onClick={login}>
             Войти
           </Button>
         </div>

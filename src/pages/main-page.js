@@ -24,7 +24,8 @@ function MainPage() {
     (store) => store.ingredients
   );
   const dispatch = useDispatch();
-
+  const user = useSelector((store) => store.auth);
+  console.log(user);
   // открытие и закрытие модальных окон
   const [visible, setVisible] = useState({
     visibleOrder: false,

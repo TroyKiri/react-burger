@@ -1,6 +1,9 @@
 import { useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import formStyles from "./form.module.css";
+
+import { signUp } from "../services/actions/authAction";
 
 import {
   Input,
@@ -15,8 +18,18 @@ function RegisterPage() {
   const inputNameRef = useRef(null);
   const inputEmailRef = useRef(null);
 
+  const dispatch = useDispatch();
+
   const onChange = (e) => {
     setPasswordValue(e.target.value);
+  };
+
+  const register = (e) => {
+    e.preventDefault();
+    dispatch(signUp(nameValue, emailValue, passwordValue));
+    setNameValue("");
+    setEmailValue("");
+    setPasswordValue("");
   };
 
   return (
@@ -59,7 +72,7 @@ function RegisterPage() {
           />
         </div>
         <div className={`${formStyles.button}`}>
-          <Button type="primary" size="medium">
+          <Button type="primary" size="medium" onClick={register}>
             Зарегистрироваться
           </Button>
         </div>
