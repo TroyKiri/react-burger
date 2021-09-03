@@ -4,6 +4,13 @@ import appStyles from "./app.module.css";
 // подключение компонентов
 import AppHeader from "../app-header/app-header.js";
 
+import { ProtectedRoute } from "../protected-route";
+
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { getUserWithRefresh } from "../../services/actions/authAction";
+import { getCookie } from "../../utils/cookie";
+
 import {
   LoginPage,
   RegisterPage,
@@ -15,6 +22,11 @@ import {
 } from "../../pages/index";
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    // dispatch(getUserWithRefresh());
+  }, []);
+
   return (
     <main className={`${appStyles.page}`}>
       <Router>
@@ -32,9 +44,12 @@ function App() {
           <Route path="/reset-password" exact={true}>
             <ResetPasswordPage />
           </Route>
-          <Route path="/profile">
+          <ProtectedRoute path="/profile">
             <ProfilePage />
-          </Route>
+          </ProtectedRoute>
+          {/* <Route path="/profile">
+            <ProfilePage />
+          </Route> */}
           <Route path="/" exact={true}>
             <MainPage />
           </Route>

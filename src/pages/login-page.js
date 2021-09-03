@@ -1,15 +1,16 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import formStyles from "./form.module.css";
 
-import { signIn } from "../services/actions/authAction";
+import { signIn, getUserWithRefresh } from "../services/actions/authAction";
 
 import {
   Input,
   Button,
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { getCookie } from "../utils/cookie";
 
 function LoginPage() {
   const [emailValue, setEmailValue] = useState("");
@@ -19,8 +20,7 @@ function LoginPage() {
 
   const dispatch = useDispatch();
   const user = useSelector((store) => store.auth);
-  // console.log(user);
-  console.log(document.cookie);
+
   const onIconClick = () => {
     setTimeout(() => inputPasswordRef.current.focus(), 0);
   };
@@ -35,8 +35,12 @@ function LoginPage() {
     setPasswordValue("");
   };
 
+  useEffect(() => {
+    dispatch(getUserWithRefresh());
+  }, []);
+
   if (user.email && user.name) {
-    return <Redirect to="/" />;
+    return <Redirect to="/profile" />;
   }
 
   return (

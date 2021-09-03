@@ -1,8 +1,15 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import styles from "./profile-info.module.css";
 
+import {
+  getUserWithRefresh,
+  updateUserWithRefresh,
+} from "../../services/actions/authAction";
+
 import { Input } from "@ya.praktikum/react-developer-burger-ui-components";
+import { getCookie } from "../../utils/cookie";
 
 function ProfileInfo() {
   const [nameValue, setNameValue] = useState("Марк");
@@ -12,11 +19,23 @@ function ProfileInfo() {
   const inputEmailRef = useRef(null);
   const inputPasswordRef = useRef(null);
 
+  const [stateOfIcon, setStateOfIcon] = useState(false);
+
+  const dispatch = useDispatch();
+  const user = useSelector((store) => store.auth);
+  console.log(user);
+
   const onIconClick = (ref) => {
     setTimeout(() => {
-      ref.current.removeAttribute("disabled");
-      ref.current.classList.remove("input__textfield-disabled");
-      ref.current.focus();
+      if (!stateOfIcon) {
+        setStateOfIcon(true);
+        ref.current.removeAttribute("disabled");
+        ref.current.classList.remove("input__textfield-disabled");
+        ref.current.focus();
+      } else {
+        setStateOfIcon(false);
+        dispatch(updateUserWithRefresh(nameValue, emailValue, passwordValue));
+      }
     }, 0);
   };
 
@@ -24,6 +43,29 @@ function ProfileInfo() {
     ref.current.disabled = true;
     ref.current.classList.add("input__textfield-disabled");
   };
+
+  // const init = async () => {
+  //   await dispatch(getUserWithRefresh()).then(() => {
+  //     setEmailValue(user.email);
+  //     setNameValue(user.name);
+  //   });
+  // };
+
+  useEffect(() => {
+    // init();
+    // if (getCookie("accessToken")) {
+    // console.log("test");
+    dispatch(getUserWithRefresh());
+    // setEmailValue(user.email);
+    // setNameValue(user.name);
+    // }
+  }, []);
+
+  useEffect(() => {
+    setEmailValue(user.email);
+    setNameValue(user.name);
+  }, [user]);
+
   return (
     <>
       <div className={styles.container}>

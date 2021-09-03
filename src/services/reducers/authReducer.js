@@ -1,4 +1,10 @@
-import { SIGN_UP, SIGN_IN, LOG_OUT } from "../actions/authAction";
+import {
+  SIGN_UP,
+  SIGN_IN,
+  LOG_OUT,
+  GET_USER,
+  PATCH_USER,
+} from "../actions/authAction";
 
 const initialUserState = {
   email: "",
@@ -21,28 +27,27 @@ const authReducer = (state = initialUserState, action) => {
         name: action.user.name,
       };
     }
+    case GET_USER: {
+      return {
+        ...state,
+        email: action.user.email,
+        name: action.user.name,
+      };
+    }
+    case PATCH_USER: {
+      return {
+        ...state,
+        email: action.user.email,
+        name: action.user.name,
+      };
+    }
     case LOG_OUT: {
       return {
         ...state,
-        email: '',
-        name: '',
+        email: "",
+        name: "",
       };
     }
-    // case GET_INGREDIENTS_SUCCESS: {
-    //   return {
-    //     ...state,
-    //     ingredientsRequest: false,
-    //     ingredientsFailed: false,
-    //     ingredients: action.ingredients,
-    //   };
-    // }
-    // case GET_INGREDIENTS_FAILED: {
-    //   return {
-    //     ...state,
-    //     ingredientsRequest: false,
-    //     ingredientsFailed: true,
-    //   };
-    // }
     default: {
       return state;
     }

@@ -24,6 +24,7 @@ export function setCookie(name, value, props) {
 }
 
 export function getCookie(name) {
+  console.log(document.cookie);
   const matches = document.cookie.match(
     new RegExp(
       "(?:^|; )" +
@@ -38,11 +39,12 @@ export function deleteCookie(name) {
   setCookie(name, null, { expires: -1 });
 }
 
-const checkResponse = (res) => {
+export const checkResponse = (res) => {
   return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };
 
 export function refreshToken() {
+  // console.log(getCookie("refreshToken"));
   return fetch(REFRESH_TOKEN, {
     method: "POST",
     mode: "cors",
@@ -52,6 +54,7 @@ export function refreshToken() {
       "Content-Type": "application/json; charset=utf-8",
     },
     body: JSON.stringify({
+      // token: localStorage.getItem('refreshToken'),
       token: getCookie("refreshToken"),
     }),
     redirect: "follow",
