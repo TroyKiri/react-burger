@@ -9,6 +9,7 @@
   text-decoration: none;
   line-height: 64px;
   color: #8585ad;
+  cursor: pointer;
 }
 .text_active {
   color: #fff;

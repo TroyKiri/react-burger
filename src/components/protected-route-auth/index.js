@@ -8,12 +8,13 @@ import { getCookie } from "../../utils/cookie";
 export const ProtectedRouteAuth = ({ children, ...rest }) => {
   const user = useSelector((store) => store.auth);
   const [isUserLoaded, setUserLoaded] = useState(false); //?
+  const [token, setToken] = useState();
 
   const dispatch = useDispatch();
   const { state } = useLocation();
+  const accessToken = getCookie("accessToken");
+
   useEffect(() => {
-    const accessToken = getCookie("accessToken");
-    accessToken && dispatch(getUserWithRefresh());
     setUserLoaded(true);
   }, []);
 

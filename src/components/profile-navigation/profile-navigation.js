@@ -33,16 +33,11 @@ function ProfileNavigation() {
             История заказов
           </NavLink>
         </li>
-        <li className={styles.list}>
-          <NavLink
-            exact={true}
-            to={{ pathname: "/" }}
-            className={`text text_type_main-medium ${styles.link}`}
-            activeClassName={`${styles.text_active}`}
-            onClick={logout}
-          >
-            Выход
-          </NavLink>
+        <li
+          className={`${styles.list} ${styles.link} text text_type_main-medium`}
+          onClick={logout}
+        >
+          Выход
         </li>
       </ul>
     </nav>

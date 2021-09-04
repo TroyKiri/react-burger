@@ -7,14 +7,13 @@ import { getCookie } from "../../utils/cookie";
 
 export const ProtectedRoute = ({ children, ...rest }) => {
   const user = useSelector((store) => store.auth);
-  const [isUserLoaded, setUserLoaded] = useState(false); //?
+  const [isUserLoaded, setUserLoaded] = useState(false);
 
   const dispatch = useDispatch();
 
   const accessToken = getCookie("accessToken");
 
   useEffect(() => {
-    const accessToken = getCookie("accessToken");
     accessToken && dispatch(getUserWithRefresh());
     setUserLoaded(true);
   }, []);
@@ -27,8 +26,7 @@ export const ProtectedRoute = ({ children, ...rest }) => {
     <Route
       {...rest}
       render={({ location }) =>
-        // accessToken ? (
-        user.name && user.email ? (
+        accessToken ? (
           children
         ) : (
           <Redirect

@@ -43,8 +43,6 @@ export const checkResponse = (res) => {
 };
 
 export function refreshToken() {
-  console.log(document.cookie);
-  console.log(getCookie("refreshToken"));
   return fetch(REFRESH_TOKEN, {
     method: "POST",
     mode: "cors",

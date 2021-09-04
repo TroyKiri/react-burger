@@ -121,11 +121,9 @@ function App() {
         )}
         {background && (
           <Route path="/ingredients/:ingredientId" exact>
-            {visible.visibleIngredient && (
-              <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
-                <IngredientDetails />
-              </Modal>
-            )}
+            <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
+              <IngredientDetails />
+            </Modal>
           </Route>
         )}
       </>

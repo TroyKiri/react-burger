@@ -52,9 +52,9 @@ function ProfileInfo() {
     ref.current.classList.add("input__textfield-disabled");
   };
 
-  useEffect(() => {
-    dispatch(getUserWithRefresh());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getUserWithRefresh());
+  // }, []);
 
   useEffect(() => {
     setEmailValue(user.email);

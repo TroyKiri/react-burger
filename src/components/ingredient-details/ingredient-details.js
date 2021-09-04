@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import ingredientDetailsStyles from "./ingredient-details.module.css";
 
 import {
@@ -10,6 +10,7 @@ import {
 
 function IngredientDetails() {
   const dispatch = useDispatch();
+  const location = useLocation();
   const { currentIngredient } = useSelector((store) => store);
   const { ingredients } = useSelector((store) => store.ingredients);
   const { ingredientId } = useParams();
@@ -26,7 +27,10 @@ function IngredientDetails() {
           item: choosenIngredient,
         });
     }
-    return () => dispatch({ type: DELETE_INGREDIENT });
+    return () => {
+      delete location.state;
+      dispatch({ type: DELETE_INGREDIENT });
+    };
   }, [ingredients]);
 
   return (

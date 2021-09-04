@@ -50,7 +50,6 @@ export const getUserWithRefresh = () => {
   };
 };
 export const updateUserWithRefresh = (name, email, password) => {
-  //
   const form = password ? { name, email, password } : { name, email };
 
   return function (dispatch) {
@@ -80,8 +79,7 @@ export const fetchWithRefresh = async (url, options) => {
       const refreshData = await refreshToken();
       setCookie("accessToken", refreshData.accessToken.split("Bearer ")[1]);
       setCookie("refreshToken", refreshData.refreshToken);
-      options.headers.Authorization =
-        refreshData.accessToken.split("Bearer ")[1];
+      options.headers.Authorization = refreshData.accessToken;
       const res = await fetch(url, options);
       return await checkResponse(res);
     } else {
