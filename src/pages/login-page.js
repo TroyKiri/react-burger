@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useLocation } from "react-router-dom";
 import formStyles from "./form.module.css";
 
 import { signIn, getUserWithRefresh } from "../services/actions/authAction";
@@ -21,6 +21,8 @@ function LoginPage() {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.auth);
 
+  const { state } = useLocation();
+
   const onIconClick = () => {
     setTimeout(() => inputPasswordRef.current.focus(), 0);
   };
@@ -40,7 +42,7 @@ function LoginPage() {
   }, []);
 
   if (user.email && user.name) {
-    return <Redirect to="/profile" />;
+    return <Redirect to={`${state?.from.pathname}` || "/"} />;
   }
 
   return (

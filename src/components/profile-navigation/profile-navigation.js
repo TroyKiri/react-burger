@@ -1,21 +1,14 @@
 import { NavLink } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { logOut } from "../../services/actions/authAction";
-import { useEffect } from "react";
 
 import styles from "./profile-navigation.module.css";
-
-import { getUserWithRefresh } from "../../services/actions/authAction";
 
 function ProfileNavigation() {
   const dispatch = useDispatch();
   const logout = () => {
     dispatch(logOut());
   };
-
-  useEffect(() => {
-    // dispatch(getUserWithRefresh());
-  }, []);
 
   return (
     <nav className={`mb-20`}>

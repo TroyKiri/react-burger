@@ -1,8 +1,11 @@
 .main {
   margin-top: 120px;
-  width: 88.888%;
+  width: 1280px;
+  margin-right: auto;
+  margin-left: auto;
   display: flex;
   flex-wrap: wrap;
+  padding-left: 20px;
 }
 .container {
   min-width: 320px;

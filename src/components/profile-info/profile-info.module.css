@@ -1,7 +1,11 @@
 .info {
   width: 320px;
-  flex-basis: 100%;
+  margin-right: 236px;
 }
 .container {
   min-width: 320px;
+}
+.buttons {
+  flex-basis: 100%;
+  display: flex;
 }

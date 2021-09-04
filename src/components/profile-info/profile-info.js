@@ -8,35 +8,34 @@ import {
   updateUserWithRefresh,
 } from "../../services/actions/authAction";
 
-import { Input } from "@ya.praktikum/react-developer-burger-ui-components";
-import { getCookie } from "../../utils/cookie";
+import {
+  Input,
+  Button,
+} from "@ya.praktikum/react-developer-burger-ui-components";
 
 function ProfileInfo() {
-  const [nameValue, setNameValue] = useState("Марк");
-  const [emailValue, setEmailValue] = useState("mail@stellar.burgers");
-  const [passwordValue, setPasswordValue] = useState("123456");
+  const [nameValue, setNameValue] = useState("");
+  const [emailValue, setEmailValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
   const inputNameRef = useRef(null);
   const inputEmailRef = useRef(null);
   const inputPasswordRef = useRef(null);
 
-  const [stateOfIcon, setStateOfIcon] = useState(false);
-
   const dispatch = useDispatch();
   const user = useSelector((store) => store.auth);
-  console.log(user);
 
   const onIconClick = (ref) => {
-    setTimeout(() => {
-      if (!stateOfIcon) {
-        setStateOfIcon(true);
-        ref.current.removeAttribute("disabled");
-        ref.current.classList.remove("input__textfield-disabled");
-        ref.current.focus();
-      } else {
-        setStateOfIcon(false);
-        dispatch(updateUserWithRefresh(nameValue, emailValue, passwordValue));
-      }
-    }, 0);
+    ref.current.removeAttribute("disabled");
+    ref.current.classList.remove("input__textfield-disabled");
+    ref.current.focus();
+  };
+
+  const updateUser = () => {
+    dispatch(updateUserWithRefresh(nameValue, emailValue, passwordValue));
+  };
+
+  const cancelUpdate = () => {
+    dispatch(getUserWithRefresh());
   };
 
   const onBlur = (ref) => {
@@ -44,21 +43,8 @@ function ProfileInfo() {
     ref.current.classList.add("input__textfield-disabled");
   };
 
-  // const init = async () => {
-  //   await dispatch(getUserWithRefresh()).then(() => {
-  //     setEmailValue(user.email);
-  //     setNameValue(user.name);
-  //   });
-  // };
-
   useEffect(() => {
-    // init();
-    // if (getCookie("accessToken")) {
-    // console.log("test");
     dispatch(getUserWithRefresh());
-    // setEmailValue(user.email);
-    // setNameValue(user.name);
-    // }
   }, []);
 
   useEffect(() => {
@@ -121,11 +107,19 @@ function ProfileInfo() {
           />
         </div>
       </div>
-      <p
-        className={`text text_type_main-default text_color_inactive ${styles.info} mt-2`}
-      >
-        В этом разделе вы можете <br /> изменить свои персональные данные
-      </p>
+      <div className={styles.buttons}>
+        <p
+          className={`text text_type_main-default text_color_inactive ${styles.info} mt-2`}
+        >
+          В этом разделе вы можете <br /> изменить свои персональные данные
+        </p>
+        <Button type="secondary" onClick={cancelUpdate}>
+          Отмена
+        </Button>
+        <Button type="primary" onClick={updateUser}>
+          Сохранить
+        </Button>
+      </div>
     </>
   );
 }

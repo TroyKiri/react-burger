@@ -45,7 +45,7 @@ export const getUserWithRefresh = () => {
         });
       })
       .catch((e) => {
-        // console.log(`Ошибка: статус промиса: ${e}`);
+        console.log(`Ошибка: статус промиса: ${e}`);
       });
   };
 };
@@ -69,41 +69,17 @@ export const updateUserWithRefresh = (name, email, password) => {
 
 export const fetchWithRefresh = async (url, options) => {
   try {
-    // options.headers.Authorization = "Bearer " + getCookie("accessToken");
-    const res = await fetch(url, {
-      method: "GET",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + getCookie("accessToken"),
-      },
-      redirect: "follow",
-      referrerPolicy: "no-referrer",
-    });
+    options.headers.Authorization = "Bearer " + getCookie("accessToken");
+    const res = await fetch(url, options);
     return await checkResponse(res);
   } catch (err) {
     if (err.message === "jwt expired") {
-      console.log("здесь");
       const refreshData = await refreshToken();
-      // console.log(refreshData);
-      // localStorage.setItem("refreshToken", refreshData.refreshToken);
-      setCookie("accessToken", refreshData.accessToken);
+      setCookie("accessToken", refreshData.accessToken.split("Bearer ")[1]);
       setCookie("refreshToken", refreshData.refreshToken);
-      // options.headers.Authorization = refreshData.accessToken;
-      const res = await fetch(url, {
-        method: "GET",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + getCookie("accessToken"),
-        },
-        redirect: "follow",
-        referrerPolicy: "no-referrer",
-      });
+      options.headers.Authorization =
+        refreshData.accessToken.split("Bearer ")[1];
+      const res = await fetch(url, options);
       return await checkResponse(res);
     } else {
       return Promise.reject(err);
