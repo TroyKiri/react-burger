@@ -50,10 +50,13 @@ export const getUserWithRefresh = () => {
   };
 };
 export const updateUserWithRefresh = (name, email, password) => {
+  //
+  const form = password ? { name, email, password } : { name, email };
+
   return function (dispatch) {
     fetchWithRefresh(PROFILE, {
       ...optionsForUpdateUser,
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify(form),
     })
       .then((res) => {
         dispatch({

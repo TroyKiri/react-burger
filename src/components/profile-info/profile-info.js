@@ -14,6 +14,12 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 function ProfileInfo() {
+  // первоначальные значения полей с информацией о пользователе
+  const [initialNameValue, setInitialNameValue] = useState("");
+  const [initialEmailValue, setInitialEmailValue] = useState("");
+  // const [initialPasswordValue, setInitialPasswordValue] = useState("");
+  const initialPasswordValue = "";
+
   const [nameValue, setNameValue] = useState("");
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
@@ -35,7 +41,10 @@ function ProfileInfo() {
   };
 
   const cancelUpdate = () => {
-    dispatch(getUserWithRefresh());
+    //заменяем поля на предыдущие значения
+    setNameValue(initialNameValue);
+    setEmailValue(initialEmailValue);
+    setPasswordValue(initialPasswordValue);
   };
 
   const onBlur = (ref) => {
@@ -50,6 +59,9 @@ function ProfileInfo() {
   useEffect(() => {
     setEmailValue(user.email);
     setNameValue(user.name);
+    // записываем в начальные значения данные, пришедшие с сервера
+    setInitialNameValue(user.name);
+    setInitialEmailValue(user.email);
   }, [user]);
 
   return (

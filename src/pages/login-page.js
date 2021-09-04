@@ -37,10 +37,6 @@ function LoginPage() {
     setPasswordValue("");
   };
 
-  useEffect(() => {
-    dispatch(getUserWithRefresh());
-  }, []);
-
   if (user.email && user.name) {
     return <Redirect to={`${state?.from.pathname}` || "/"} />;
   }

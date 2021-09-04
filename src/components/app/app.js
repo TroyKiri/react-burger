@@ -7,10 +7,6 @@ import AppHeader from "../app-header/app-header.js";
 import { ProtectedRoute } from "../protected-route";
 import { ProtectedRouteAuth } from "../protected-route-auth";
 
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { getUserWithRefresh } from "../../services/actions/authAction";
-
 import {
   LoginPage,
   RegisterPage,
@@ -22,11 +18,6 @@ import {
 } from "../../pages/index";
 
 function App() {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getUserWithRefresh());
-  }, []);
-
   return (
     <main className={`${appStyles.page}`}>
       <Router>
