@@ -1,6 +1,8 @@
 import { ORDER_ID } from "../../utils/constants";
 import { RESET_CONSTRUCTOR } from "./constructorAction";
 
+import { getCookie } from "../../utils/cookie";
+
 // экшены для получения номера заказа
 export const GET_ORDER_NUMBER_REQUEST = "GET_ORDER_NUMBER_REQUEST";
 export const GET_ORDER_NUMBER_SUCCESS = "GET_ORDER_NUMBER_SUCCESS";
@@ -16,6 +18,7 @@ export function getOrderNumber(ingredientsId, openModal) {
       body: JSON.stringify({ ingredients: ingredientsId }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + getCookie("accessToken"),
       },
     })
       .then((res) => {
@@ -31,7 +34,7 @@ export function getOrderNumber(ingredientsId, openModal) {
         openModal();
       })
       .catch((e) => {
-        console.log(`Ошибка: статус промиса: ${e}`);
+        // console.log(`Ошибка: статус промиса: ${e}`);
         dispatch({
           type: GET_ORDER_NUMBER_FAILED,
         });

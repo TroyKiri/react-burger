@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import formStyles from "./form.module.css";
 
@@ -19,7 +20,8 @@ function RegisterPage() {
   const inputEmailRef = useRef(null);
 
   const dispatch = useDispatch();
-
+  const { successRegister } = useSelector((store) => store.auth);
+  const history = useHistory();
   const onChange = (e) => {
     setPasswordValue(e.target.value);
   };
@@ -31,6 +33,10 @@ function RegisterPage() {
     setEmailValue("");
     setPasswordValue("");
   };
+
+  if (successRegister) {
+    history.replace("/login");
+  }
 
   return (
     <div className={`${formStyles.main}`}>

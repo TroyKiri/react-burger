@@ -1,10 +1,9 @@
 import { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useDrop } from "react-dnd";
+import { useHistory } from "react-router-dom";
 
-import {
-  addIngredientToConstructor,
-} from "../../services/actions/constructorAction";
+import { addIngredientToConstructor } from "../../services/actions/constructorAction";
 import { getOrderNumber } from "../../services/actions/orderAction";
 
 import PropTypes from "prop-types";
@@ -18,12 +17,15 @@ import {
   CurrencyIcon,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { getCookie } from "../../utils/cookie";
 
 function BurgerConstructor(props) {
+  const history = useHistory();
+
   const [{ isHover }, dropTarget] = useDrop({
     accept: "ingredient",
     drop(ingredient) {
-      dispatch(addIngredientToConstructor({ingredient}));
+      dispatch(addIngredientToConstructor({ ingredient }));
     },
     collect: (monitor) => ({
       isHover: monitor.isOver(),
@@ -55,9 +57,9 @@ function BurgerConstructor(props) {
     const arrayOfStuffingId = stuffing.map((item) => item._id);
     const arrayOfIngredientsId = [...arrayOfStuffingId, bun._id];
     // проверяем наличие булочки и хотя бы одной начинки
-    !!stuffing.length &&
-      !!Object.keys(bun).length &&
-      dispatch(getOrderNumber(arrayOfIngredientsId, props.openModal));
+    !!stuffing.length && !!Object.keys(bun).length && getCookie("accessToken")
+      ? dispatch(getOrderNumber(arrayOfIngredientsId, props.openModal))
+      : history.replace("/login");
   }
 
   return (

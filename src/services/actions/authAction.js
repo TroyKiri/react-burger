@@ -16,6 +16,7 @@ import {
 
 //экшены для авторизации
 export const SIGN_UP = "SIGN_UP";
+export const SIGN_UP_SUCCESFULL = "SIGN_UP_SUCCESFULL";
 export const SIGN_IN = "SIGN_IN";
 export const LOG_OUT = "LOG_OUT";
 // получение данных о пользователе
@@ -110,6 +111,9 @@ export function signUp(name, email, password) {
         return res.ok ? res : Promise.reject(res.status);
       })
       .then((res) => res.json())
+      .then(() => {
+        dispatch({ type: SIGN_UP_SUCCESFULL });
+      })
       .catch((e) => {
         console.log(`Ошибка: статус промиса: ${e}`);
       });

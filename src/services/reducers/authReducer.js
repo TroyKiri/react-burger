@@ -1,5 +1,6 @@
 import {
   SIGN_UP,
+  SIGN_UP_SUCCESFULL,
   SIGN_IN,
   LOG_OUT,
   GET_USER,
@@ -18,6 +19,12 @@ const authReducer = (state = initialUserState, action) => {
         ...state,
         email: action.user.email,
         name: action.user.name,
+      };
+    }
+    case SIGN_UP_SUCCESFULL: {
+      return {
+        ...state,
+        successRegister: true,
       };
     }
     case SIGN_IN: {
