@@ -43,7 +43,8 @@ export const checkResponse = (res) => {
 };
 
 export function refreshToken() {
-  // console.log(getCookie("refreshToken"));
+  console.log(document.cookie);
+  console.log(getCookie("refreshToken"));
   return fetch(REFRESH_TOKEN, {
     method: "POST",
     mode: "cors",
@@ -53,7 +54,6 @@ export function refreshToken() {
       "Content-Type": "application/json; charset=utf-8",
     },
     body: JSON.stringify({
-      // token: localStorage.getItem('refreshToken'),
       token: getCookie("refreshToken"),
     }),
     redirect: "follow",

@@ -1,8 +1,33 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import ingredientDetailsStyles from "./ingredient-details.module.css";
 
+import {
+  CHOOSE_INGREDIENT,
+  DELETE_INGREDIENT,
+} from "../../services/actions/ingredientDetailsAction";
+
 function IngredientDetails() {
+  const dispatch = useDispatch();
   const { currentIngredient } = useSelector((store) => store);
+  const { ingredients } = useSelector((store) => store.ingredients);
+  const { ingredientId } = useParams();
+
+  useEffect(() => {
+    let choosenIngredient;
+    if (!currentIngredient._id) {
+      choosenIngredient = ingredients.filter(
+        (item) => item._id === ingredientId
+      )[0];
+      choosenIngredient &&
+        dispatch({
+          type: CHOOSE_INGREDIENT,
+          item: choosenIngredient,
+        });
+    }
+    return () => dispatch({ type: DELETE_INGREDIENT });
+  }, [ingredients]);
 
   return (
     <div className={ingredientDetailsStyles.container}>

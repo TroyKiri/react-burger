@@ -11,6 +11,8 @@ export const ProtectedRoute = ({ children, ...rest }) => {
 
   const dispatch = useDispatch();
 
+  const accessToken = getCookie("accessToken");
+
   useEffect(() => {
     const accessToken = getCookie("accessToken");
     accessToken && dispatch(getUserWithRefresh());
@@ -25,6 +27,7 @@ export const ProtectedRoute = ({ children, ...rest }) => {
     <Route
       {...rest}
       render={({ location }) =>
+        // accessToken ? (
         user.name && user.email ? (
           children
         ) : (
