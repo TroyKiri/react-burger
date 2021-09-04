@@ -40,6 +40,8 @@ function BurgerConstructor(props) {
     (store) => store.constructorIngredients
   );
 
+  const { orderNumberRequest } = useSelector((store) => store.order);
+
   // Итоговая стоимость
   const priceOfStuffing = useMemo(
     () =>
@@ -62,12 +64,8 @@ function BurgerConstructor(props) {
       : history.replace("/login");
   }
 
-  return (
-    <section
-      className={`${burgerConstructorStyles.container} mr-9 pt-25`}
-      ref={dropTarget}
-      style={{ border }}
-    >
+  const content = (
+    <>
       {!!Object.keys(bun).length && (
         <li className={`${burgerConstructorStyles.listElement} mr-4`}>
           <ConstructorElement
@@ -108,6 +106,21 @@ function BurgerConstructor(props) {
           />
         </li>
       )}
+    </>
+  );
+
+  return (
+    <section
+      className={`${burgerConstructorStyles.container} mr-9 pt-25`}
+      ref={dropTarget}
+      style={{ border }}
+    >
+      {orderNumberRequest ? (
+        <h1 className="text text_type_main-medium">Оформляем заказ...</h1>
+      ) : (
+        content
+      )}
+
       <div className={`${burgerConstructorStyles.orderContainer} mt-10 mr-4`}>
         <div className={`${burgerConstructorStyles.priceContainer} mr-10`}>
           <p className="text text_type_digits-medium mr-2">

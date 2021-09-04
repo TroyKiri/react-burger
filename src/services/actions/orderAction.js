@@ -34,7 +34,7 @@ export function getOrderNumber(ingredientsId, openModal) {
         openModal();
       })
       .catch((e) => {
-        // console.log(`Ошибка: статус промиса: ${e}`);
+        console.log(`Ошибка: статус промиса: ${e}`);
         dispatch({
           type: GET_ORDER_NUMBER_FAILED,
         });

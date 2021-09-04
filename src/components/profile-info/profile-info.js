@@ -3,10 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import styles from "./profile-info.module.css";
 
-import {
-  getUserWithRefresh,
-  updateUserWithRefresh,
-} from "../../services/actions/authAction";
+import { updateUserWithRefresh } from "../../services/actions/authAction";
 
 import {
   Input,
@@ -51,10 +48,6 @@ function ProfileInfo() {
     ref.current.disabled = true;
     ref.current.classList.add("input__textfield-disabled");
   };
-
-  // useEffect(() => {
-  //   dispatch(getUserWithRefresh());
-  // }, []);
 
   useEffect(() => {
     setEmailValue(user.email);

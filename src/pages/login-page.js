@@ -1,16 +1,15 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Redirect, useLocation } from "react-router-dom";
 import formStyles from "./form.module.css";
 
-import { signIn, getUserWithRefresh } from "../services/actions/authAction";
+import { signIn } from "../services/actions/authAction";
 
 import {
   Input,
   Button,
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { getCookie } from "../utils/cookie";
 
 function LoginPage() {
   const [emailValue, setEmailValue] = useState("");
@@ -36,9 +35,6 @@ function LoginPage() {
     setEmailValue("");
     setPasswordValue("");
   };
-
-  const location = useLocation();
-  console.log(location);
 
   if (user.email && user.name) {
     return <Redirect to={`${state?.from.pathname}` || "/"} />;

@@ -22,11 +22,6 @@ function ResetPasswordPage() {
   const history = useHistory();
   const location = useLocation();
 
-  console.log("location");
-  console.log(location);
-  console.log("history");
-  console.log(history);
-
   const onIconClick = () => {
     setTimeout(() => inputPasswordRef.current.focus(), 0);
   };

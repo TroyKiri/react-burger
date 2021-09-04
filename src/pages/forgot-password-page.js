@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useHistory, useLocation, Redirect } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import formStyles from "./form.module.css";
 
 import {
@@ -19,8 +19,6 @@ function ForgotPasswordPage() {
   const history = useHistory();
   const location = useLocation();
 
-  console.log(location);
-
   const forgotPass = (event) => {
     event.preventDefault();
     dispatch(forgotPassword(emailValue));
@@ -28,14 +26,12 @@ function ForgotPasswordPage() {
 
   useEffect(() => {
     if (forgotPasswordSuccess) {
-      // location.state = location.pathname;
-      // history.replace("/reset-password");
       history.replace({
         pathname: "/reset-password",
         state: location.pathname,
       });
     }
-  }, [forgotPasswordSuccess, history]);
+  }, [forgotPasswordSuccess, history, location]);
 
   return (
     <div className={`${formStyles.main}`}>
