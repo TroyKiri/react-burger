@@ -1,4 +1,4 @@
-import { ORDER_ID } from "../../utils/constants";
+import { BASE_URL } from "../../utils/constants";
 import { RESET_CONSTRUCTOR } from "./constructorAction";
 
 import { getCookie } from "../../utils/cookie";
@@ -13,7 +13,7 @@ export function getOrderNumber(ingredientsId, openModal) {
     dispatch({
       type: GET_ORDER_NUMBER_REQUEST,
     });
-    return fetch(ORDER_ID, {
+    return fetch(`${BASE_URL}/orders`, {
       method: "POST",
       body: JSON.stringify({ ingredients: ingredientsId }),
       headers: {

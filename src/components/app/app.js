@@ -38,7 +38,10 @@ function App() {
   const ModalSwitch = () => {
     const location = useLocation();
     const history = useHistory();
-    let background = location.state && location.state.background;
+    let background =
+      (history.action === "PUSH" || history.action === "REPLACE") &&
+      location.state &&
+      location.state.background;
 
     const dispatch = useDispatch();
 

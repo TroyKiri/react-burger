@@ -1,4 +1,4 @@
-import { REFRESH_TOKEN } from "./constants";
+import { BASE_URL } from "./constants";
 
 export function setCookie(name, value, props) {
   props = props || {};
@@ -43,7 +43,7 @@ export const checkResponse = (res) => {
 };
 
 export function refreshToken() {
-  return fetch(REFRESH_TOKEN, {
+  return fetch(`${BASE_URL}/auth/token`, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",

@@ -6,6 +6,7 @@ import ingredientDetailsReducer from "./ingredientDetailsReducer";
 import orderReducer from "./orderReducer";
 
 import authReducer from "./authReducer";
+import passwordReducer from "./passwordReducer";
 
 const rootReducer = combineReducers({
   constructorIngredients: constructorReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   order: orderReducer,
   ingredients: ingredientsReducer,
   auth: authReducer,
+  password: passwordReducer,
 });
 
 export default rootReducer;

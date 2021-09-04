@@ -1,10 +1,4 @@
-import {
-  REGISTER,
-  LOGIN,
-  LOGOUT,
-  PROFILE,
-  UPDATE_PROFILE,
-} from "../../utils/constants";
+import { BASE_URL } from "../../utils/constants";
 
 import {
   setCookie,
@@ -38,7 +32,7 @@ const optionsForUpdateUser = { ...options, method: "PATCH" };
 
 export const getUserWithRefresh = () => {
   return function (dispatch) {
-    fetchWithRefresh(PROFILE, optionsForGetUser)
+    fetchWithRefresh(`${BASE_URL}/auth/user`, optionsForGetUser)
       .then((res) => {
         dispatch({
           type: GET_USER,
@@ -54,7 +48,7 @@ export const updateUserWithRefresh = (name, email, password) => {
   const form = password ? { name, email, password } : { name, email };
 
   return function (dispatch) {
-    fetchWithRefresh(PROFILE, {
+    fetchWithRefresh(`${BASE_URL}/auth/user`, {
       ...optionsForUpdateUser,
       body: JSON.stringify(form),
     })
@@ -91,7 +85,7 @@ export const fetchWithRefresh = async (url, options) => {
 
 export function signUp(name, email, password) {
   return function (dispatch) {
-    return fetch(REGISTER, {
+    return fetch(`${BASE_URL}/auth/register`, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",
@@ -122,7 +116,7 @@ export function signUp(name, email, password) {
 
 export function signIn(email, password) {
   return function (dispatch) {
-    return fetch(LOGIN, {
+    return fetch(`${BASE_URL}/auth/login`, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",
@@ -158,7 +152,7 @@ export function signIn(email, password) {
 
 export const logOut = () => {
   return function (dispatch) {
-    return fetch(LOGOUT, {
+    return fetch(`${BASE_URL}/auth/logout`, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",

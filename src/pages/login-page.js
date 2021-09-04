@@ -37,6 +37,9 @@ function LoginPage() {
     setPasswordValue("");
   };
 
+  const location = useLocation();
+  console.log(location);
+
   if (user.email && user.name) {
     return <Redirect to={`${state?.from.pathname}` || "/"} />;
   }

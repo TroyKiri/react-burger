@@ -1,4 +1,4 @@
-import { DATA_ID } from "../../utils/constants";
+import { BASE_URL } from "../../utils/constants";
 
 //экшены для загрузки ингредиентов с API
 export const GET_INGREDIENTS_REQUEST = "GET_INGREDIENTS_REQUEST";
@@ -11,7 +11,7 @@ export function getIngredients() {
       type: GET_INGREDIENTS_REQUEST,
     });
 
-    return fetch(DATA_ID)
+    return fetch(`${BASE_URL}/ingredients`)
       .then((res) => {
         return res.ok ? res : Promise.reject(res.status);
       })
