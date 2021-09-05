@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
 
 import { getUserWithRefresh } from "../../services/actions/authAction";
@@ -11,6 +11,8 @@ export const ProtectedRoute = ({ children, ...rest }) => {
   const dispatch = useDispatch();
 
   const accessToken = getCookie("accessToken");
+
+  const user = useSelector((store) => store.auth);
 
   useEffect(() => {
     accessToken && dispatch(getUserWithRefresh());
@@ -25,7 +27,7 @@ export const ProtectedRoute = ({ children, ...rest }) => {
     <Route
       {...rest}
       render={({ location }) =>
-        accessToken ? (
+        accessToken && user.name && user.email ? (
           children
         ) : (
           <Redirect
