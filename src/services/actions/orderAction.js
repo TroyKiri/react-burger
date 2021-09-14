@@ -1,5 +1,7 @@
-import { ORDER_ID } from "../../utils/constants";
+import { BASE_URL } from "../../utils/constants";
 import { RESET_CONSTRUCTOR } from "./constructorAction";
+
+import { getCookie } from "../../utils/cookie";
 
 // экшены для получения номера заказа
 export const GET_ORDER_NUMBER_REQUEST = "GET_ORDER_NUMBER_REQUEST";
@@ -11,12 +13,12 @@ export function getOrderNumber(ingredientsId, openModal) {
     dispatch({
       type: GET_ORDER_NUMBER_REQUEST,
     });
-
-    return fetch(ORDER_ID, {
+    return fetch(`${BASE_URL}/orders`, {
       method: "POST",
       body: JSON.stringify({ ingredients: ingredientsId }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + getCookie("accessToken"),
       },
     })
       .then((res) => {

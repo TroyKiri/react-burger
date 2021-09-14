@@ -1,98 +1,143 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-
-import { getIngredients } from "../../services/actions/ingredientsAction";
-
-import { DELETE_INGREDIENT } from "../../services/actions/ingredientDetailsAction";
-// dnd
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  useLocation,
+  useHistory,
+} from "react-router-dom";
 // стили для компонента App
 import appStyles from "./app.module.css";
 // подключение компонентов
 import AppHeader from "../app-header/app-header.js";
-import BurgerIngredients from "../burger-ingredients/burger-ingredients.js";
-import BurgerConstructor from "../burger-constructor/burger-constructor.js";
+
+import { ProtectedRoute } from "../protected-route";
+import { ProtectedRouteAuth } from "../protected-route-auth";
+
+import {
+  LoginPage,
+  RegisterPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  NotFound404,
+  ProfilePage,
+  MainPage,
+} from "../../pages/index";
+
+import { BURGER_CONSTRUCTOR, BURGER_INGREDIENT } from "../../utils/constants";
+
+import { DELETE_INGREDIENT } from "../../services/actions/ingredientDetailsAction";
 
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import IngredientDetails from "../ingredient-details/ingredient-details";
-
-import { BURGER_CONSTRUCTOR, BURGER_INGREDIENT } from "../../utils/constants";
+import { getIngredients } from "../../services/actions/ingredientsAction";
 
 function App() {
-  const { ingredientsRequest, ingredientsFailed } = useSelector(
-    (store) => store.ingredients
-  );
-  const dispatch = useDispatch();
+  const ModalSwitch = () => {
+    const location = useLocation();
+    const history = useHistory();
+    let background =
+      (history.action === "PUSH" || history.action === "REPLACE") &&
+      location.state &&
+      location.state.background;
 
-  // открытие и закрытие модальных окон
-  const [visible, setVisible] = useState({
-    visibleOrder: false,
-    visibleIngredient: false,
-  });
-  // при монтировании вешаем слушатель нажатия на ESC
-  useEffect(() => {
-    const escHnalder = (event) => event.key === "Escape" && closeModal();
-    document.addEventListener("keydown", escHnalder);
+    const dispatch = useDispatch();
 
-    return () => document.removeEventListener("keydown", escHnalder);
-  }, []);
-
-  // открытие модальных окон
-  const openModal = (target) => () => {
-    if (target === BURGER_CONSTRUCTOR) {
-      setVisible({
-        visibleOrder: true,
-        visibleIngredient: false,
-      });
-    } else if (target === BURGER_INGREDIENT) {
-      setVisible({
-        visibleOrder: false,
-        visibleIngredient: true,
-      });
-    }
-  };
-
-  // закрытие модальных окон
-  const closeModal = () => {
-    setVisible({
+    // открытие и закрытие модальных окон
+    const [visible, setVisible] = useState({
       visibleOrder: false,
       visibleIngredient: false,
     });
-    dispatch({ type: DELETE_INGREDIENT });
-  };
 
-  useEffect(() => {
-    dispatch(getIngredients());
-  }, []);
+    useEffect(() => {
+      dispatch(getIngredients());
+    }, []);
+    // при монтировании вешаем слушатель нажатия на ESC
+    useEffect(() => {
+      const escHnalder = (event) => event.key === "Escape" && closeModal();
+      document.addEventListener("keydown", escHnalder);
+
+      return () => document.removeEventListener("keydown", escHnalder);
+    }, []);
+
+    // открытие модальных окон
+    const openModal = (target) => () => {
+      if (target === BURGER_CONSTRUCTOR) {
+        setVisible({
+          visibleOrder: true,
+          visibleIngredient: false,
+        });
+      } else if (target === BURGER_INGREDIENT) {
+        setVisible({
+          visibleOrder: false,
+          visibleIngredient: true,
+        });
+      }
+    };
+
+    // закрытие модальных окон
+    const closeModal = () => {
+      history.replace("/");
+      setVisible({
+        visibleOrder: false,
+        visibleIngredient: false,
+      });
+      dispatch({ type: DELETE_INGREDIENT });
+    };
+
+    return (
+      <>
+        <AppHeader />
+        <Switch location={background || location}>
+          <ProtectedRouteAuth path="/forgot-password" exact={true}>
+            <ForgotPasswordPage />
+          </ProtectedRouteAuth>
+          <ProtectedRouteAuth path="/register" exact={true}>
+            <RegisterPage />
+          </ProtectedRouteAuth>
+          <ProtectedRouteAuth path="/login" exact={true}>
+            <LoginPage />
+          </ProtectedRouteAuth>
+          <ProtectedRouteAuth path="/reset-password" exact={true}>
+            <ResetPasswordPage />
+          </ProtectedRouteAuth>
+          <ProtectedRoute path="/profile">
+            <ProfilePage />
+          </ProtectedRoute>
+          <Route path="/" exact>
+            <MainPage openModal={openModal} />
+          </Route>
+          <Route path="/ingredients/:ingredientId" exact>
+            <IngredientDetails />
+          </Route>
+          <Route>
+            <NotFound404 />
+          </Route>
+        </Switch>
+
+        {visible.visibleOrder && (
+          <Modal onClose={closeModal}>
+            <OrderDetails />
+          </Modal>
+        )}
+        {background && (
+          <Route path="/ingredients/:ingredientId" exact>
+            <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
+              <IngredientDetails />
+            </Modal>
+          </Route>
+        )}
+      </>
+    );
+  };
 
   return (
     <main className={`${appStyles.page}`}>
-      <AppHeader />
-      <section className={appStyles.main}>
-        {ingredientsFailed ? (
-          <p>Произошла ошибка при получении данных</p>
-        ) : ingredientsRequest ? (
-          <p>Загрузка...</p>
-        ) : (
-          <DndProvider backend={HTML5Backend}>
-            <BurgerIngredients openModal={openModal(BURGER_INGREDIENT)} />
-            <BurgerConstructor openModal={openModal(BURGER_CONSTRUCTOR)} />
-          </DndProvider>
-        )}
-      </section>
-
-      {visible.visibleOrder && (
-        <Modal onClose={closeModal}>
-          <OrderDetails />
-        </Modal>
-      )}
-      {visible.visibleIngredient && (
-        <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
-          <IngredientDetails />
-        </Modal>
-      )}
+      <Router>
+        <ModalSwitch />
+      </Router>
     </main>
   );
 }

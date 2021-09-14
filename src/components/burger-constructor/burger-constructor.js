@@ -1,10 +1,9 @@
 import { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useDrop } from "react-dnd";
+import { useHistory } from "react-router-dom";
 
-import {
-  addIngredientToConstructor,
-} from "../../services/actions/constructorAction";
+import { addIngredientToConstructor } from "../../services/actions/constructorAction";
 import { getOrderNumber } from "../../services/actions/orderAction";
 
 import PropTypes from "prop-types";
@@ -18,12 +17,15 @@ import {
   CurrencyIcon,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { getCookie } from "../../utils/cookie";
 
 function BurgerConstructor(props) {
+  const history = useHistory();
+
   const [{ isHover }, dropTarget] = useDrop({
     accept: "ingredient",
     drop(ingredient) {
-      dispatch(addIngredientToConstructor({ingredient}));
+      dispatch(addIngredientToConstructor({ ingredient }));
     },
     collect: (monitor) => ({
       isHover: monitor.isOver(),
@@ -37,6 +39,8 @@ function BurgerConstructor(props) {
   const { bun, stuffing } = useSelector(
     (store) => store.constructorIngredients
   );
+
+  const { orderNumberRequest } = useSelector((store) => store.order);
 
   // Итоговая стоимость
   const priceOfStuffing = useMemo(
@@ -55,17 +59,13 @@ function BurgerConstructor(props) {
     const arrayOfStuffingId = stuffing.map((item) => item._id);
     const arrayOfIngredientsId = [...arrayOfStuffingId, bun._id];
     // проверяем наличие булочки и хотя бы одной начинки
-    !!stuffing.length &&
-      !!Object.keys(bun).length &&
-      dispatch(getOrderNumber(arrayOfIngredientsId, props.openModal));
+    !!stuffing.length && !!Object.keys(bun).length && getCookie("accessToken")
+      ? dispatch(getOrderNumber(arrayOfIngredientsId, props.openModal))
+      : history.replace("/login");
   }
 
-  return (
-    <section
-      className={`${burgerConstructorStyles.container} mr-9 pt-25`}
-      ref={dropTarget}
-      style={{ border }}
-    >
+  const content = (
+    <>
       {!!Object.keys(bun).length && (
         <li className={`${burgerConstructorStyles.listElement} mr-4`}>
           <ConstructorElement
@@ -106,6 +106,21 @@ function BurgerConstructor(props) {
           />
         </li>
       )}
+    </>
+  );
+
+  return (
+    <section
+      className={`${burgerConstructorStyles.container} mr-9 pt-25`}
+      ref={dropTarget}
+      style={{ border }}
+    >
+      {orderNumberRequest ? (
+        <h1 className="text text_type_main-medium">Оформляем заказ...</h1>
+      ) : (
+        content
+      )}
+
       <div className={`${burgerConstructorStyles.orderContainer} mt-10 mr-4`}>
         <div className={`${burgerConstructorStyles.priceContainer} mr-10`}>
           <p className="text text_type_digits-medium mr-2">

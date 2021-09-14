@@ -1,0 +1,16 @@
+.lists {
+  padding-left: 0;
+  margin: 0;
+}
+.list {
+  list-style-type: none;
+}
+.link {
+  text-decoration: none;
+  line-height: 64px;
+  color: #8585ad;
+  cursor: pointer;
+}
+.text_active {
+  color: #fff;
+}
