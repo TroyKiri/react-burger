@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logOut } from "../../services/actions/authAction";
 
@@ -10,7 +10,12 @@ function ProfileNavigation() {
     dispatch(logOut());
   };
 
+  const location = useLocation();
+
+  const isFeed = location.pathname.startsWith(`/profile/orders`) ? true : false;
+
   return (
+    <>
     <nav className={`mb-20`}>
       <ul className={styles.lists}>
         <li className={styles.list}>
@@ -41,6 +46,12 @@ function ProfileNavigation() {
         </li>
       </ul>
     </nav>
+    {isFeed && <p
+      className={`text text_type_main-default text_color_inactive ${styles.info} mt-2`}
+    >
+      В этом разделе вы можете <br/> просмотреть свою историю заказов
+    </p>}
+  </>
   );
 }
 

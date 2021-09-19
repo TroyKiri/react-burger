@@ -1,0 +1,32 @@
+.info {
+  width: 584px;
+}
+
+.container_status {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.container_done {
+  width: 46.57%;
+}
+.container_working {
+  width: 46.57%;
+}
+
+.number_done {
+  color:#00CCCC;
+}
+
+.number_done:last-child {
+  margin-bottom: 0;
+}
+
+.number_working:last-child{
+  margin-bottom: 0
+}
+
+.amount {
+  text-shadow: 0px 0px 16px rgba(51, 51, 255, 0.25), 0px 0px 8px rgba(51, 51, 255, 0.25), 0px 4px 32px rgba(51, 51, 255, 0.5);
+}

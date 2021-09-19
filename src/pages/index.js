@@ -5,6 +5,7 @@ import ResetPasswordPage from "./reset-password-page";
 import NotFound404 from "./not-found-page";
 import ProfilePage from "./profile-page";
 import MainPage from "./main-page";
+import FeedPage from "./feed-page/feed-page";
 
 export {
   LoginPage,
@@ -14,4 +15,5 @@ export {
   NotFound404,
   ProfilePage,
   MainPage,
+  FeedPage,
 };

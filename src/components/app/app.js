@@ -23,9 +23,10 @@ import {
   NotFound404,
   ProfilePage,
   MainPage,
+  FeedPage,
 } from "../../pages/index";
 
-import { BURGER_CONSTRUCTOR, BURGER_INGREDIENT } from "../../utils/constants";
+import { BURGER_CONSTRUCTOR, BURGER_INGREDIENT, STATE_OF_ORDER } from "../../utils/constants";
 
 import { DELETE_INGREDIENT } from "../../services/actions/ingredientDetailsAction";
 
@@ -33,6 +34,7 @@ import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import { getIngredients } from "../../services/actions/ingredientsAction";
+import StateOfOrder from "../state-of-order/state-of-order";
 
 function App() {
   const ModalSwitch = () => {
@@ -49,6 +51,7 @@ function App() {
     const [visible, setVisible] = useState({
       visibleOrder: false,
       visibleIngredient: false,
+      visibleStateOrder: false,
     });
 
     useEffect(() => {
@@ -69,22 +72,25 @@ function App() {
           visibleOrder: true,
           visibleIngredient: false,
         });
-      } else if (target === BURGER_INGREDIENT) {
-        setVisible({
-          visibleOrder: false,
-          visibleIngredient: true,
-        });
       }
     };
 
     // закрытие модальных окон
     const closeModal = () => {
-      history.replace("/");
+      if (history.location.pathname.startsWith('/ingredients/')) {
+        history.replace("/");
+        dispatch({ type: DELETE_INGREDIENT });
+      } else if (history.location.pathname.startsWith('/feed/')) {
+        history.replace("/feed")
+      } else if (history.location.pathname.startsWith('/profile/orders/')) {
+        history.replace("/profile/orders")
+      } 
       setVisible({
         visibleOrder: false,
         visibleIngredient: false,
+        visibleStateOrder: false,
       });
-      dispatch({ type: DELETE_INGREDIENT });
+
     };
 
     return (
@@ -103,6 +109,9 @@ function App() {
           <ProtectedRouteAuth path="/reset-password" exact={true}>
             <ResetPasswordPage />
           </ProtectedRouteAuth>
+          <ProtectedRoute path="/profile/orders/:id" exact>
+            <StateOfOrder />
+          </ProtectedRoute>
           <ProtectedRoute path="/profile">
             <ProfilePage />
           </ProtectedRoute>
@@ -111,6 +120,12 @@ function App() {
           </Route>
           <Route path="/ingredients/:ingredientId" exact>
             <IngredientDetails />
+          </Route>
+          <Route path="/feed" exact>
+            <FeedPage openModal={openModal} />
+          </Route>
+          <Route path="/feed/:id" exact>
+            <StateOfOrder />
           </Route>
           <Route>
             <NotFound404 />
@@ -126,6 +141,20 @@ function App() {
           <Route path="/ingredients/:ingredientId" exact>
             <Modal type={BURGER_INGREDIENT} onClose={closeModal}>
               <IngredientDetails />
+            </Modal>
+          </Route>
+        )}
+        {background && (
+          <Route path="/feed/:id" exact>
+            <Modal type={STATE_OF_ORDER} onClose={closeModal}>
+              <StateOfOrder />
+            </Modal>
+          </Route>
+        )}
+        {background && (
+          <Route path="/profile/orders/:id" exact>
+            <Modal type={STATE_OF_ORDER} onClose={closeModal}>
+              <StateOfOrder />
             </Modal>
           </Route>
         )}

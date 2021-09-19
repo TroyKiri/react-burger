@@ -4,6 +4,7 @@ import styles from "./profile-page.module.css";
 
 import ProfileNavigation from "../components/profile-navigation/profile-navigation";
 import ProfileInfo from "../components/profile-info/profile-info";
+import OrderList from "../components/order-list/order-list";
 
 function ProfilePage() {
   return (
@@ -16,11 +17,7 @@ function ProfilePage() {
           <ProfileInfo />
         </Route>
         <Route path="/profile/orders" exact={true}>
-          <div className={styles.container}>
-            <h1 className={`text text_type_main-medium text_color_inactive`}>
-              На данный момент функционал не доступен
-            </h1>
-          </div>
+          <OrderList />
         </Route>
       </Switch>
     </div>

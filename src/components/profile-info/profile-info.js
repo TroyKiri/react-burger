@@ -59,7 +59,12 @@ function ProfileInfo() {
 
   return (
     <>
-      <div className={styles.container}>
+      <div 
+        className={styles.container}
+        style ={{
+          marginTop: 120,
+        }}
+      >
         <div className={`${styles.input} mb-6`}>
           <Input
             type={"text"}
